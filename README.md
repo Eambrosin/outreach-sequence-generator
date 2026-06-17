@@ -1,6 +1,6 @@
 # AI Outreach Intelligence Platform
 
-Live Demo:
+## Live Demo
 
 https://outreach-sequence-generator-7dcmglcxfnmszlodg8lqre.streamlit.app/
 
@@ -20,11 +20,11 @@ Many opportunities stall after a proposal, quotation, FCO or commercial offer is
 
 Most teams:
 
-* Lack a structured follow-up process
-* Prioritize accounts inconsistently
-* Fail to identify revenue at risk
-* Use the same outreach approach across markets
-* Miss opportunities due to poor timing
+- Lack a structured follow-up process
+- Prioritize accounts inconsistently
+- Fail to identify revenue at risk
+- Use the same outreach approach across markets
+- Miss opportunities due to poor timing
 
 This platform helps commercial teams identify where to focus and how to engage.
 
@@ -34,70 +34,56 @@ This platform helps commercial teams identify where to focus and how to engage.
 
 ### Executive Outreach Dashboard
 
-Provides an executive view of:
-
-* Total accounts
-* Pipeline value
-* Revenue at risk
-* High-priority follow-ups
-* Recommended channel strategy
+- Pipeline visibility
+- Revenue at risk
+- Follow-up urgency
+- Channel strategy
 
 ### Follow-Up Prioritization Engine
 
-Ranks opportunities based on:
+Ranks opportunities using:
 
-* Deal value
-* Proposal age
-* Market relevance
-* Commercial urgency
+- Deal value
+- Proposal age
+- Commercial urgency
 
 ### Business Development Intelligence Layer
 
 Generates:
 
-* Recommended motion
-* Partnership potential
-* Expansion potential
-* Decision risk
-* Stakeholder recommendations
+- Recommended motion
+- Expansion potential
+- Partnership potential
+- Risk assessment
+- Stakeholder recommendations
 
 ### AI Outreach Intelligence
 
 Creates:
 
-* Account summary
-* Commercial opportunity assessment
-* Expansion hypothesis
-* Partnership hypothesis
-* Outreach strategy
-* Risk assessment
+- Account Summary
+- Commercial Opportunity
+- Expansion Hypothesis
+- Partnership Hypothesis
+- Recommended Outreach Strategy
+- Risk Assessment
 
 ### Multi-Step Outreach Sequences
 
-Automatically generates:
-
-* Day 1 follow-up
-* Day 3 value-add follow-up
-* Day 7 re-engagement message
-* Day 14 final touch
-
-### Exportable Outputs
-
-Export:
-
-* Follow-up sequences
-* AI outreach intelligence
-* Prioritization outputs
+- Day 1 Follow-up
+- Day 3 Value Add
+- Day 7 Re-engagement
+- Day 14 Final Touch
 
 ---
 
 ## Live Applications
 
-### AI Lead Qualification & Revenue Prioritization Platform
+### Lead Qualification Platform
 
 https://lead-qualification-scorer-eambrosin.streamlit.app/
 
-### AI Outreach Intelligence Platform
+### Outreach Intelligence Platform
 
 https://outreach-sequence-generator-7dcmglcxfnmszlodg8lqre.streamlit.app/
 
@@ -105,41 +91,25 @@ https://outreach-sequence-generator-7dcmglcxfnmszlodg8lqre.streamlit.app/
 
 ## Tech Stack
 
-* Python
-* Streamlit
-* Pandas
-* OpenAI SDK
+- Python
+- Streamlit
+- Pandas
 
 ---
 
 ## Use Cases
 
-* Business Development
-* Strategic Partnerships
-* GTM Strategy
-* Revenue Operations
-* Commercial Excellence
-* International Expansion
-
----
-
-## Future Improvements
-
-* CRM integration
-* HubSpot integration
-* Salesforce integration
-* Account enrichment
-* Stakeholder discovery
-* Territory planning
-* Opportunity forecasting
+- Business Development
+- Strategic Partnerships
+- GTM Strategy
+- Revenue Operations
+- International Expansion
 
 ---
 
 ## Author
 
 Eduardo Ambrosin
-
-Business Development | Partnerships | GTM | AI Applications
 
 GitHub:
 https://github.com/Eambrosin
