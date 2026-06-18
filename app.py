@@ -146,7 +146,7 @@ uploaded = st.file_uploader("Upload Pipeline CSV", type=["csv"])
 if uploaded is not None:
     df = pd.read_csv(uploaded)
 else:
-    df = pd.read_csv("pipeline.csv")
+    df = pd.read_csv("data/pipeline.csv")
 
 required_columns = [
     "contact_name",
