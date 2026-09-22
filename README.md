@@ -2,6 +2,11 @@
 
 ### Commercial Prioritization | Adaptive Cadence | Multilingual Outreach | AI-Assisted Business Development
 
+[![Live App](https://img.shields.io/badge/Live%20App-Streamlit-FF4B4B?logo=streamlit&logoColor=white)](https://outreach-sequence-generator-7dcmglcxfnmszlodg8lqre.streamlit.app/)
+![Python](https://img.shields.io/badge/Python-3.11%2B-blue?logo=python&logoColor=white)
+![Streamlit](https://img.shields.io/badge/Streamlit-App-FF4B4B?logo=streamlit&logoColor=white)
+[![Python CI](https://github.com/Eambrosin/outreach-sequence-generator/actions/workflows/ci.yml/badge.svg)](https://github.com/Eambrosin/outreach-sequence-generator/actions/workflows/ci.yml)
+
 A practical Commercial Intelligence application designed to help Business Development, Sales, Partnerships and GTM teams determine **who to contact, when to engage, which channel to use and what commercial action should happen next**.
 
 The platform transforms pipeline context into an adaptive outreach strategy using deterministic commercial logic, multilingual communication profiles and an optional AI-assisted message generation layer.
