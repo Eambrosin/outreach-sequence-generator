@@ -33,4 +33,7 @@ jobs:
           python -m py_compile outreach_generator.py
 
       - name: Run tests
-        run: pytest -q
+        env:
+          PYTHONPATH: ${{ github.workspace }}
+        run: |
+          python -m pytest -q
