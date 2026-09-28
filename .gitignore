@@ -6,3 +6,6 @@ __pycache__/
 app_before_stage_*.py
 outreach_generator_backup.py
 sequences/
+.venv/
+.env.*
+.streamlit/secrets.toml
