@@ -112,3 +112,67 @@ def test_pipeline_without_proposal_is_prospecting():
     )
 
     assert lead["outreach_stage"] == "prospecting"
+
+
+def test_aged_proposal_receives_high_priority():
+    lead = normalize_lead(
+        {
+            "company": "Proposal Company",
+            "country": "United Kingdom",
+            "deal_value_usd": 100000,
+            "proposal_sent_days_ago": 12,
+        }
+    )
+    strategy = build_outreach_strategy(lead)
+    assert strategy["priority"] == "High"
+    assert "proposal status" in strategy["commercial_objective"].lower()
+
+
+def test_unknown_country_uses_default_profile():
+    lead = normalize_lead(
+        {
+            "company_name": "Unknown Market Company",
+            "country": "Exampleland",
+            "estimated_deal_value_usd": 100000,
+            "tier": "B",
+        }
+    )
+    strategy = build_outreach_strategy(lead)
+    assert strategy["language"] == "English"
+    assert strategy["primary_channel"] == "Email"
+
+
+def test_uae_profile_switches_from_email_to_whatsapp():
+    from outreach_generator import COUNTRY_PROFILE, channel_for_touch
+
+    profile = COUNTRY_PROFILE["UAE"]
+    assert channel_for_touch(profile, 1) == "Email"
+    assert channel_for_touch(profile, 2) == "WhatsApp"
+
+
+def test_local_sequence_does_not_expose_internal_score():
+    from outreach_generator import COUNTRY_PROFILE, generate_local_sequence
+
+    lead = normalize_lead(
+        {
+            "company_name": "Private Score Company",
+            "country": "Italy",
+            "estimated_deal_value_usd": 250000,
+            "score": 91,
+            "tier": "A",
+            "engagement_signal": "hot",
+            "score_rationale": "Internal scoring detail",
+        }
+    )
+    profile = COUNTRY_PROFILE["Italy"]
+    strategy = build_outreach_strategy(lead, profile)
+    sequence = generate_local_sequence(lead, profile, strategy)
+
+    combined = " ".join(
+        item["message"]
+        for item in sequence.values()
+    ).lower()
+
+    assert "91" not in combined
+    assert "internal scoring detail" not in combined
+    assert "tier a" not in combined
