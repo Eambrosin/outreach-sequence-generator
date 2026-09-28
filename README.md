@@ -291,6 +291,12 @@ See [CHANGELOG.md](CHANGELOG.md) for release details.
 
 ---
 
+## Demo Data
+
+The bundled demo pipeline is **synthetic demonstration data**, not a client pipeline or a record of real transactions.
+
+---
+
 ## Limitations
 
 This is a portfolio and decision-support application, not a production CRM or automated sales-engagement platform.
