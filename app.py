@@ -396,6 +396,12 @@ with st.sidebar:
         "AI, when configured, generates prospect-facing copy."
     )
 
+    if ai_enabled:
+        st.caption(
+            "When AI generation is used, the selected account context is sent to Anthropic. "
+            "Avoid uploading sensitive personal or confidential information."
+        )
+
     st.divider()
 
     st.markdown(
