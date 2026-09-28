@@ -159,6 +159,8 @@ It also instructs the model not to invent company projects, budgets, decision ma
 
 If AI generation is unavailable or fails, the platform returns a deterministic local sequence instead.
 
+When AI generation is enabled, the selected account context is sent to Anthropic for generation. Users should avoid submitting sensitive personal or confidential information.
+
 ---
 
 ## Commercial Intelligence Workflow
