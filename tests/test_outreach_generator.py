@@ -377,3 +377,65 @@ def test_field_day_plan_is_cluster_filterable():
 
     assert len(plan) == 1
     assert plan.iloc[0]["company"] == "Verona Account"
+
+
+def test_nullable_enrichment_fields_do_not_become_literal_na_strings():
+    lead = normalize_lead(
+        {
+            "company_name": "Example Clinic",
+            "country": "Italy",
+            "industry": "Medical Aesthetics",
+            "account_website": pd.NA,
+            "public_phone": pd.NA,
+            "public_email": pd.NA,
+            "public_address": pd.NA,
+            "enrichment_status": pd.NA,
+            "account_data_completeness": pd.NA,
+        }
+    )
+
+    assert lead["account_website"] == ""
+    assert lead["public_phone"] == ""
+    assert lead["public_email"] == ""
+    assert lead["public_address"] == ""
+    assert lead["enrichment_status"] == ""
+    assert lead["account_data_completeness"] == 0
+
+
+def test_field_day_plan_preserves_enriched_visit_details():
+    dataframe = pd.DataFrame(
+        [
+            {
+                "company": "Visit Ready Clinic",
+                "contact_name": "Dr. Rossi",
+                "territory_profile_id": "it_north_medical_aesthetics",
+                "territory_region": "Lombardia",
+                "territory_province": "Milano",
+                "territory_city": "Milano",
+                "public_address": "Via Roma 10, Milano",
+                "public_phone": "+39 02 1234 5678",
+                "public_email": "info@exampleclinic.it",
+                "account_website": "https://exampleclinic.it",
+                "enrichment_status": "Enriched",
+                "contact_status": "Ready for Field Visit",
+                "priority": "High",
+                "account_opportunity_score": 90,
+                "contact_readiness_score": 92,
+                "score": 88,
+                "linkedin_url": "https://www.linkedin.com/in/example",
+            }
+        ]
+    )
+
+    plan = build_field_day_plan(
+        dataframe,
+        region="Lombardia",
+        province="Milano",
+        max_accounts=5,
+    )
+
+    row = plan.iloc[0]
+    assert row["public_address"] == "Via Roma 10, Milano"
+    assert row["public_phone"] == "+39 02 1234 5678"
+    assert row["account_website"] == "https://exampleclinic.it"
+    assert row["enrichment_status"] == "Enriched"
