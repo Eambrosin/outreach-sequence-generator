@@ -176,3 +176,50 @@ def test_local_sequence_does_not_expose_internal_score():
     assert "91" not in combined
     assert "internal scoring detail" not in combined
     assert "tier a" not in combined
+
+
+def test_medical_aesthetics_preserves_upstream_contact_intelligence():
+    lead = normalize_lead(
+        {
+            "contact_name": "Dr. Giulia Rossi",
+            "company_name": "Example Clinic",
+            "country": "Italy",
+            "industry": "Medical Aesthetics",
+            "estimated_deal_value_usd": 75000,
+            "engagement_signal": "warm",
+            "score": 84,
+            "tier": "A",
+            "market_profile_id": "medical_aesthetics",
+            "source_stage": "PRIORITIZE",
+            "linkedin_url": "https://www.linkedin.com/in/example",
+            "contact_headline": "Medical Director",
+            "outreach_angle": "Clinical fit, training and patient-development support",
+            "professional_setting": "Medical-setting signal observed",
+        }
+    )
+
+    assert lead["market_profile_id"] == "medical_aesthetics"
+    assert lead["linkedin_url"].startswith("https://www.linkedin.com/")
+    assert lead["contact_headline"] == "Medical Director"
+    assert lead["outreach_angle"]
+
+
+def test_medical_aesthetics_strategy_adds_domain_validation():
+    lead = normalize_lead(
+        {
+            "company_name": "Aesthetic Center",
+            "country": "Italy",
+            "industry": "Medical Aesthetics",
+            "estimated_deal_value_usd": 50000,
+            "engagement_signal": "cold",
+            "professional_setting": "Professional/device eligibility to validate",
+            "outreach_angle": "Treatment portfolio and staff training",
+        }
+    )
+
+    strategy = build_outreach_strategy(lead)
+    objective = strategy["commercial_objective"].lower()
+
+    assert "treatment portfolio" in objective
+    assert "eligibility" in objective
+    assert "upstream research" in objective
