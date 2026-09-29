@@ -31,6 +31,7 @@ jobs:
         run: |
           python -m py_compile app.py
           python -m py_compile outreach_generator.py
+          python -m py_compile field_planner.py
 
       - name: Run tests
         env:
