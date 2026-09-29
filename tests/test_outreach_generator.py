@@ -223,3 +223,72 @@ def test_medical_aesthetics_strategy_adds_domain_validation():
     assert "treatment portfolio" in objective
     assert "eligibility" in objective
     assert "upstream research" in objective
+
+
+def test_territory_metadata_and_contact_readiness_are_preserved():
+    lead = normalize_lead(
+        {
+            "company_name": "Milano Aesthetic Clinic",
+            "country": "Italy",
+            "industry": "Medical Aesthetics",
+            "market_profile_id": "medical_aesthetics",
+            "territory_profile_id": "it_north_medical_aesthetics",
+            "vendor_profile_id": "deleo_north_italy",
+            "territory_region": "Lombardia",
+            "territory_province": "Milano",
+            "territory_city": "Milano",
+            "territory_status": "Find Decision Maker",
+            "account_opportunity_score": 89,
+            "contact_readiness_score": 86,
+            "contact_status": "Ready for Field Visit",
+            "observed_technology_axes": "Silhouette / Body Contouring",
+            "estimated_deal_value_usd": 90000,
+            "tier": "A",
+        }
+    )
+
+    assert lead["territory_profile_id"] == "it_north_medical_aesthetics"
+    assert lead["vendor_profile_id"] == "deleo_north_italy"
+    assert lead["territory_province"] == "Milano"
+    assert lead["account_opportunity_score"] == 89
+    assert lead["contact_readiness_score"] == 86
+    assert lead["contact_status"] == "Ready for Field Visit"
+
+
+def test_ready_contact_generates_field_visit_motion():
+    lead = normalize_lead(
+        {
+            "company_name": "Verona Clinic",
+            "country": "Italy",
+            "industry": "Medical Aesthetics",
+            "territory_profile_id": "it_north_medical_aesthetics",
+            "territory_region": "Veneto",
+            "territory_province": "Verona",
+            "territory_city": "Verona",
+            "contact_status": "Ready for Field Visit",
+            "account_opportunity_score": 91,
+            "estimated_deal_value_usd": 100000,
+            "tier": "A",
+        }
+    )
+    strategy = build_outreach_strategy(lead)
+    assert strategy["field_motion"] == "Field visit candidate"
+
+
+def test_south_tyrol_adds_language_verification_note():
+    lead = normalize_lead(
+        {
+            "company_name": "Bozen Aesthetic Medizin",
+            "country": "Italy",
+            "industry": "Medical Aesthetics",
+            "territory_profile_id": "it_north_medical_aesthetics",
+            "territory_region": "Trentino-Alto Adige",
+            "territory_province": "Bolzano / Bozen",
+            "territory_city": "Bozen",
+            "estimated_deal_value_usd": 80000,
+            "tier": "B",
+        }
+    )
+    strategy = build_outreach_strategy(lead)
+    assert "German" in strategy["territory_language_note"]
+    assert "Italian" in strategy["territory_language_note"]
