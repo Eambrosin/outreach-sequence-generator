@@ -521,6 +521,30 @@ def normalize_lead(
                 "",
             )
         ).strip(),
+
+        "market_profile_id": str(
+            first_value(row, ["market_profile_id"], "")
+        ).strip(),
+
+        "source_stage": str(
+            first_value(row, ["source_stage"], "")
+        ).strip(),
+
+        "linkedin_url": str(
+            first_value(row, ["linkedin_url"], "")
+        ).strip(),
+
+        "contact_headline": str(
+            first_value(row, ["contact_headline", "headline"], "")
+        ).strip(),
+
+        "outreach_angle": str(
+            first_value(row, ["outreach_angle", "suggested_outreach_angle"], "")
+        ).strip(),
+
+        "professional_setting": str(
+            first_value(row, ["professional_setting"], "")
+        ).strip(),
     }
 
     lead[
@@ -757,6 +781,26 @@ def build_outreach_strategy(
             "Clarify proposal status, surface blockers "
             "and obtain a clear next step while preserving "
             "the commercial relationship."
+        )
+
+    if lead.get("industry") == "Medical Aesthetics" and stage == "prospecting":
+        objective = (
+            "Validate treatment portfolio, professional setting, technology fit, "
+            "training/service expectations and the decision process before proposing "
+            "a device-specific commercial next step."
+        )
+
+        if "eligibility" in lead.get("professional_setting", "").lower():
+            objective += (
+                " Confirm product/professional eligibility before making "
+                "device-specific claims or recommendations."
+            )
+
+    if lead.get("outreach_angle"):
+        objective += (
+            " Suggested outreach angle from upstream research: "
+            + lead["outreach_angle"]
+            + "."
         )
 
     recommended_action = (
