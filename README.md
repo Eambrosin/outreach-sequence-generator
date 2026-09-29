@@ -141,6 +141,20 @@ Continue territory research and qualification
 
 For Bolzano / Bozen, the system keeps Italian as the country-level default but explicitly prompts the user to verify whether the contact prefers German or Italian rather than assuming language preference.
 
+### Field Day Planner
+
+Territory pipelines can be converted into a province/city-clustered visit shortlist.
+
+The planner prioritizes:
+
+- Ready for Field Visit / Ready for Outreach status
+- commercial priority
+- Contact Readiness
+- Account Opportunity
+- qualification score
+
+It deliberately does **not** claim to optimize driving routes or travel time. Route optimization is reserved for a future map/routing-provider integration.
+
 ---
 
 ## Decision Logic
@@ -260,6 +274,7 @@ outreach-sequence-generator/
 │
 ├── app.py
 ├── outreach_generator.py
+├── field_planner.py
 ├── requirements.txt
 ├── CHANGELOG.md
 ├── README.md
