@@ -113,6 +113,36 @@ The engine does not make clinical or regulatory conclusions. It carries upstream
 
 ---
 
+## Territory Execution
+
+When upstream data contains Territory Intelligence metadata, ENGAGE becomes a lightweight field-sales execution layer.
+
+It can preserve and display:
+
+- territory profile and vendor profile
+- region, province and city
+- Account Opportunity Score
+- territory research status
+- Contact Readiness Score
+- contact execution status
+- public LinkedIn evidence
+- observed technology axes
+- upstream outreach angle
+
+Field-motion guidance includes:
+
+```text
+Field visit candidate
+Personalized outreach before visit
+Identify and verify decision maker
+Validate professional/device eligibility first
+Continue territory research and qualification
+```
+
+For Bolzano / Bozen, the system keeps Italian as the country-level default but explicitly prompts the user to verify whether the contact prefers German or Italian rather than assuming language preference.
+
+---
+
 ## Decision Logic
 
 The engine determines:
