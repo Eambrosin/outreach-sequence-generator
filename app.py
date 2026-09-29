@@ -448,7 +448,19 @@ source_stage
 linkedin_url
 contact_headline
 outreach_angle
-professional_setting""",
+professional_setting
+territory_profile_id
+vendor_profile_id
+territory_region
+territory_province
+territory_city
+territory_cluster_id
+territory_status
+account_opportunity_score
+contact_readiness_score
+contact_status
+observed_technology_axes
+technology_validation_questions""",
             language="text",
         )
 
@@ -744,6 +756,63 @@ summary_5.metric(
     country_count,
 )
 
+territory_df = df[
+    df.get("territory_profile_id", pd.Series([""] * len(df)))
+    .fillna("")
+    .astype(str)
+    .str.strip()
+    != ""
+].copy()
+
+if not territory_df.empty:
+    st.divider()
+    st.subheader("🗺️ Territory Execution Dashboard")
+    st.caption(
+        "Operational view of accounts that arrived with Territory Intelligence metadata."
+    )
+
+    te1, te2, te3, te4, te5 = st.columns(5)
+    te1.metric("Territory Accounts", len(territory_df))
+    te2.metric(
+        "Ready for Outreach",
+        int((territory_df.get("contact_status", "") == "Ready for Outreach").sum())
+        if "contact_status" in territory_df.columns else 0,
+    )
+    te3.metric(
+        "Ready for Field Visit",
+        int((territory_df.get("contact_status", "") == "Ready for Field Visit").sum())
+        if "contact_status" in territory_df.columns else 0,
+    )
+    te4.metric(
+        "Find Decision Maker",
+        int((territory_df.get("territory_status", "") == "Find Decision Maker").sum())
+        if "territory_status" in territory_df.columns else 0,
+    )
+    te5.metric(
+        "Eligibility Validation",
+        int((territory_df.get("territory_status", "") == "Eligibility Validation").sum())
+        if "territory_status" in territory_df.columns else 0,
+    )
+
+    if "territory_region" in territory_df.columns:
+        territory_exec = (
+            territory_df.groupby("territory_region", dropna=False)
+            .agg(
+                accounts=("company", "count"),
+                high_priority=("priority", lambda v: int((v == "High").sum())),
+                avg_opportunity=("account_opportunity_score", "mean"),
+                avg_contact_readiness=("contact_readiness_score", "mean"),
+            )
+            .reset_index()
+        )
+        territory_exec["avg_opportunity"] = territory_exec["avg_opportunity"].round(1)
+        territory_exec["avg_contact_readiness"] = territory_exec["avg_contact_readiness"].round(1)
+        st.dataframe(
+            territory_exec,
+            use_container_width=True,
+            hide_index=True,
+        )
+
 
 # ---------------------------------------------------------------------
 # EXECUTIVE OUTREACH DASHBOARD
@@ -1013,6 +1082,16 @@ overview_columns = [
 
     "priority",
 
+    "territory_region",
+
+    "territory_province",
+
+    "territory_city",
+
+    "territory_status",
+
+    "contact_status",
+
     "mode",
 ]
 
@@ -1142,6 +1221,26 @@ with profile_col_1:
             f"{lead['market_profile_id']}"
         )
 
+    if lead.get("territory_profile_id"):
+        st.write(
+            f"**Territory:** "
+            f"{lead.get('territory_region', '')} · "
+            f"{lead.get('territory_province', '')} · "
+            f"{lead.get('territory_city', '') or 'city to verify'}"
+        )
+
+    if lead.get("territory_status"):
+        st.write(
+            f"**Territory Status:** "
+            f"{lead['territory_status']}"
+        )
+
+    if lead.get("contact_status"):
+        st.write(
+            f"**Contact Status:** "
+            f"{lead['contact_status']}"
+        )
+
 
 # ---------------------------------------------------------------------
 # COMMERCIAL CONTEXT
@@ -1182,6 +1281,18 @@ with profile_col_2:
         f"**Tier:** "
         f"{optional(lead['tier'], 'N/A')}"
     )
+
+    if lead.get("account_opportunity_score"):
+        st.write(
+            f"**Account Opportunity:** "
+            f"{lead['account_opportunity_score']:.1f}"
+        )
+
+    if lead.get("contact_readiness_score"):
+        st.write(
+            f"**Contact Readiness:** "
+            f"{lead['contact_readiness_score']:.1f}"
+        )
 
 
 # ---------------------------------------------------------------------
@@ -1229,6 +1340,15 @@ with profile_col_3:
             ]
         )
     )
+
+    if lead.get("territory_profile_id"):
+        st.write(
+            f"**Field Motion:** "
+            f"{strategy.get('field_motion', '')}"
+        )
+
+        if strategy.get("territory_language_note"):
+            st.caption(strategy["territory_language_note"])
 
 
 # ---------------------------------------------------------------------
