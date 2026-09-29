@@ -87,6 +87,9 @@ Supported context includes:
 - engagement signal
 - recommended action
 - score rationale
+- shared market profile ID and source-stage metadata
+- public LinkedIn URL and contact headline when supplied upstream
+- evidence-based outreach angle and professional-setting context
 
 ### 2. Standard Outreach Mode
 
@@ -99,6 +102,14 @@ The deterministic engine can still use:
 - deal value
 - country
 - communication profile
+
+---
+
+### Medical Aesthetics Context
+
+When the upstream profile is **Medical Aesthetics**, the outreach layer can preserve clinic/practitioner context and add domain-specific validation goals such as treatment-portfolio fit, training/service expectations and professional/device eligibility where required.
+
+The engine does not make clinical or regulatory conclusions. It carries upstream validation signals into the commercial workflow so the user knows what must be confirmed before device-specific outreach.
 
 ---
 
@@ -318,20 +329,13 @@ These boundaries are intentional: the project demonstrates structured Commercial
 
 ## Portfolio Context
 
-This project is the **ENGAGE** layer of a broader Commercial Intelligence portfolio:
+This project is the **ENGAGE** execution layer used by both commercial tracks:
 
 ```text
-PRIORITIZE
-Lead Qualification
-      ↓
-ENGAGE
-Adaptive Outreach
-      ↓
-PARTNER
-Partnership Intelligence
-      ↓
-EXPAND
-Market Entry Intelligence
+IDENTIFY → PRIORITIZE → ENGAGE
+IDENTIFY / Partner Universe → PARTNER → ENGAGE
+
+Both tracks can later feed EXPAND / Territory Intelligence.
 ```
 
 **Portfolio:** [github.com/Eambrosin](https://github.com/Eambrosin)
