@@ -603,6 +603,55 @@ def normalize_lead(
         "territory_location_basis": str(
             first_value(row, ["territory_location_basis"], "")
         ).strip(),
+
+        "account_website": str(
+            first_value(row, ["account_website"], "")
+        ).strip(),
+
+        "website_evidence_status": str(
+            first_value(row, ["website_evidence_status"], "")
+        ).strip(),
+
+        "public_phone": str(
+            first_value(row, ["public_phone"], "")
+        ).strip(),
+
+        "public_email": str(
+            first_value(row, ["public_email"], "")
+        ).strip(),
+
+        "public_address": str(
+            first_value(row, ["public_address"], "")
+        ).strip(),
+
+        "contact_channel_status": str(
+            first_value(row, ["contact_channel_status"], "")
+        ).strip(),
+
+        "enrichment_status": str(
+            first_value(row, ["enrichment_status"], "")
+        ).strip(),
+
+        "account_data_completeness": safe_float(
+            first_value(row, ["account_data_completeness"], 0),
+            0,
+        ),
+
+        "decision_maker_name": str(
+            first_value(row, ["decision_maker_name"], "")
+        ).strip(),
+
+        "decision_maker_headline": str(
+            first_value(row, ["decision_maker_headline"], "")
+        ).strip(),
+
+        "decision_maker_linkedin": str(
+            first_value(row, ["decision_maker_linkedin"], "")
+        ).strip(),
+
+        "decision_maker_confidence": str(
+            first_value(row, ["decision_maker_confidence"], "")
+        ).strip(),
     }
 
     lead[
