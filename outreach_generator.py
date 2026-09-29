@@ -522,6 +522,10 @@ def normalize_lead(
             )
         ).strip(),
 
+        "schema_version": str(
+            first_value(row, ["schema_version"], "1.0")
+        ).strip(),
+
         "market_profile_id": str(
             first_value(row, ["market_profile_id"], "")
         ).strip(),
