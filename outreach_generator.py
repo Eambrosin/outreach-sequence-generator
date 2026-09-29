@@ -272,21 +272,17 @@ def first_value(
         if value is None:
             continue
 
-        if (
-            isinstance(
-                value,
-                float,
-            )
-            and pd.isna(
-                value
-            )
-        ):
+        try:
+            if pd.isna(value):
+                continue
+        except Exception:
+            pass
+
+        text_value = str(value).strip()
+        if text_value.lower() in {"", "nan", "none", "<na>", "null"}:
             continue
 
-        if str(
-            value
-        ).strip():
-            return value
+        return value
 
     return default
 
@@ -303,18 +299,11 @@ def safe_float(
                 default
             )
 
-        if (
-            isinstance(
-                value,
-                float,
-            )
-            and pd.isna(
-                value
-            )
-        ):
-            return float(
-                default
-            )
+        try:
+            if pd.isna(value):
+                return float(default)
+        except Exception:
+            pass
 
         return float(
             value
