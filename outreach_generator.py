@@ -549,6 +549,60 @@ def normalize_lead(
         "professional_setting": str(
             first_value(row, ["professional_setting"], "")
         ).strip(),
+
+        "territory_profile_id": str(
+            first_value(row, ["territory_profile_id"], "")
+        ).strip(),
+
+        "vendor_profile_id": str(
+            first_value(row, ["vendor_profile_id"], "")
+        ).strip(),
+
+        "territory_region": str(
+            first_value(row, ["territory_region"], "")
+        ).strip(),
+
+        "territory_province": str(
+            first_value(row, ["territory_province"], "")
+        ).strip(),
+
+        "territory_city": str(
+            first_value(row, ["territory_city"], "")
+        ).strip(),
+
+        "territory_cluster_id": str(
+            first_value(row, ["territory_cluster_id"], "")
+        ).strip(),
+
+        "territory_status": str(
+            first_value(row, ["territory_status"], "")
+        ).strip(),
+
+        "account_opportunity_score": safe_float(
+            first_value(row, ["account_opportunity_score"], 0),
+            0,
+        ),
+
+        "contact_readiness_score": safe_float(
+            first_value(row, ["contact_readiness_score"], 0),
+            0,
+        ),
+
+        "contact_status": str(
+            first_value(row, ["contact_status"], "")
+        ).strip(),
+
+        "observed_technology_axes": str(
+            first_value(row, ["observed_technology_axes"], "")
+        ).strip(),
+
+        "technology_validation_questions": str(
+            first_value(row, ["technology_validation_questions"], "")
+        ).strip(),
+
+        "territory_location_basis": str(
+            first_value(row, ["territory_location_basis"], "")
+        ).strip(),
     }
 
     lead[
@@ -822,6 +876,30 @@ def build_outreach_strategy(
             + "."
         )
 
+    territory_status = lead.get("territory_status", "")
+    contact_status = lead.get("contact_status", "")
+
+    if contact_status == "Ready for Field Visit":
+        field_motion = "Field visit candidate"
+    elif contact_status == "Ready for Outreach":
+        field_motion = "Personalized outreach before visit"
+    elif territory_status == "Find Decision Maker":
+        field_motion = "Identify and verify decision maker"
+    elif territory_status == "Eligibility Validation":
+        field_motion = "Validate professional/device eligibility first"
+    elif lead.get("territory_profile_id"):
+        field_motion = "Continue territory research and qualification"
+    else:
+        field_motion = "Not territory-specific"
+
+    territory_language_note = ""
+    province_text = lead.get("territory_province", "").lower()
+    if "bolzano" in province_text or "bozen" in province_text:
+        territory_language_note = (
+            "Italian is the default country profile; verify whether the contact "
+            "prefers German or Italian before outreach."
+        )
+
     touches = [
 
         {
@@ -930,6 +1008,10 @@ def build_outreach_strategy(
         "commercial_objective": (
             objective
         ),
+
+        "field_motion": field_motion,
+
+        "territory_language_note": territory_language_note,
 
         "cadence_days": (
             cadence_days
