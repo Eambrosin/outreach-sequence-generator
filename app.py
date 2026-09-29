@@ -259,6 +259,11 @@ def stakeholder_function(
             "Institutional Relations, Procurement, Partnerships "
             "or Program leadership"
         ),
+
+        "Medical Aesthetics": (
+            "Owner/Founder, Medical Director, Aesthetic Physician, Dermatologist, "
+            "Clinic/Practice Manager or qualified aesthetic professional, depending on product eligibility"
+        ),
     }
 
     return mapping.get(
@@ -437,7 +442,13 @@ engagement_signal
 score
 tier
 recommended_action
-score_rationale""",
+score_rationale
+market_profile_id
+source_stage
+linkedin_url
+contact_headline
+outreach_angle
+professional_setting""",
             language="text",
         )
 
@@ -1114,6 +1125,23 @@ with profile_col_1:
         f"{optional(lead['company_size'])}"
     )
 
+    if lead.get("contact_headline"):
+        st.write(
+            f"**Contact Headline:** "
+            f"{lead['contact_headline']}"
+        )
+
+    if lead.get("linkedin_url"):
+        st.markdown(
+            f"**Public LinkedIn:** [{lead['linkedin_url']}]({lead['linkedin_url']})"
+        )
+
+    if lead.get("market_profile_id"):
+        st.write(
+            f"**Market Profile:** "
+            f"{lead['market_profile_id']}"
+        )
+
 
 # ---------------------------------------------------------------------
 # COMMERCIAL CONTEXT
@@ -1319,6 +1347,13 @@ with decision_1:
 
         "🚀",
     )
+
+    if lead.get("outreach_angle"):
+        render_card(
+            "Upstream Outreach Angle",
+            lead["outreach_angle"],
+            "🧭",
+        )
 
 
     render_card(
