@@ -461,7 +461,19 @@ account_opportunity_score
 contact_readiness_score
 contact_status
 observed_technology_axes
-technology_validation_questions""",
+technology_validation_questions
+account_website
+website_evidence_status
+public_phone
+public_email
+public_address
+contact_channel_status
+enrichment_status
+account_data_completeness
+decision_maker_name
+decision_maker_headline
+decision_maker_linkedin
+decision_maker_confidence""",
             language="text",
         )
 
@@ -1166,6 +1178,10 @@ overview_columns = [
 
     "territory_city",
 
+    "enrichment_status",
+
+    "account_data_completeness",
+
     "territory_status",
 
     "contact_status",
@@ -1318,6 +1334,55 @@ with profile_col_1:
             f"**Contact Status:** "
             f"{lead['contact_status']}"
         )
+
+    if lead.get("enrichment_status"):
+        st.write(
+            f"**Account Enrichment:** "
+            f"{lead['enrichment_status']}"
+        )
+
+    if lead.get("account_data_completeness"):
+        st.write(
+            f"**Data Completeness:** "
+            f"{lead['account_data_completeness']:.0f}%"
+        )
+
+    if lead.get("account_website"):
+        st.markdown(
+            f"**Account Website:** [{lead['account_website']}]({lead['account_website']})"
+        )
+
+    if lead.get("public_address"):
+        st.write(
+            f"**Public Address:** "
+            f"{lead['public_address']}"
+        )
+
+    if lead.get("public_phone"):
+        st.write(
+            f"**Public Phone:** "
+            f"{lead['public_phone']}"
+        )
+
+    if lead.get("public_email"):
+        st.write(
+            f"**Public Email:** "
+            f"{lead['public_email']}"
+        )
+
+    if lead.get("decision_maker_name"):
+        st.write(
+            f"**Decision-Maker Candidate:** "
+            f"{lead['decision_maker_name']}"
+        )
+        if lead.get("decision_maker_headline"):
+            st.caption(
+                lead["decision_maker_headline"]
+            )
+        if lead.get("decision_maker_linkedin"):
+            st.markdown(
+                f"**Decision-Maker LinkedIn:** [{lead['decision_maker_linkedin']}]({lead['decision_maker_linkedin']})"
+            )
 
 
 # ---------------------------------------------------------------------
