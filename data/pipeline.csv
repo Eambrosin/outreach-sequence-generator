@@ -1,10 +1,11 @@
-contact_name,company,country,industry,deal_type,deal_value_usd,proposal_sent_days_ago,your_name
-Carlos Mendoza,Andina AgroExport,Colombia,Agribusiness,Sugar Export Proposal,250000,2,Eduardo
-Khalid Al-Rashidi,Gulf Trade Partners,UAE,Logistics & Trade,Commercial Proposal,500000,4,Eduardo
-Marco Ferretti,Lusitana Properties,Italy,Real Estate,Investment Proposal,150000,1,Eduardo
-Fatima Al-Sayed,Sahara Fintech,Saudi Arabia,Fintech,Partnership Proposal,120000,6,Eduardo
-Rodrigo Almeida,Solis Renewables,Brazil,Renewable Energy,Solar Equipment Proposal,180000,3,Eduardo
-Sofia Navarro,Continental Foods,Mexico,Agribusiness,Distribution Agreement,220000,8,Eduardo
-Laura Bianchi,Milano Aesthetic Clinic,Italy,Medical Aesthetics,Technology Introduction,90000,0,Eduardo
-Andrea Conti,Regional Public Utility,Italy,Government / Public Sector,Institutional Partnership,300000,5,Eduardo
-Giulia Rossi,Milano Aesthetic Territory Demo,Italy,Medical Aesthetics,Prospecting,90000,,Eduardo
+contact_name,company,country,region,industry,company_size,deal_type,deal_value_usd,proposal_sent_days_ago,your_name,market_profile_id,territory_profile_id,vendor_profile_id,territory_region,territory_province,territory_city,territory_status,account_opportunity_score,contact_readiness_score,contact_status,contact_headline,outreach_angle,professional_setting,observed_technology_axes
+Carlos Mendoza,Andina AgroExport,Colombia,LATAM,Agribusiness,180,Sugar Export Proposal,250000,2,Eduardo,,,,,,,,,,,,,,
+Khalid Al-Rashidi,Gulf Trade Partners,UAE,MENA,Logistics & Trade,300,Commercial Proposal,500000,4,Eduardo,,,,,,,,,,,,,,
+Marco Ferretti,Lusitana Properties,Italy,EU,Real Estate,40,Investment Proposal,150000,1,Eduardo,,,,,,,,,,,,,,
+Fatima Al-Sayed,Sahara Fintech,Saudi Arabia,MENA,Fintech,80,Partnership Proposal,120000,6,Eduardo,,,,,,,,,,,,,,
+Rodrigo Almeida,Solis Renewables,Brazil,LATAM,Renewable Energy,90,Solar Equipment Proposal,180000,3,Eduardo,,,,,,,,,,,,,,
+Sofia Navarro,Continental Foods,Mexico,LATAM,Agribusiness,150,Distribution Agreement,220000,8,Eduardo,,,,,,,,,,,,,,
+Laura Bianchi,Milano Aesthetic Clinic,Italy,EU,Medical Aesthetics,24,Technology Introduction,90000,,Eduardo,medical_aesthetics,it_north_medical_aesthetics,deleo_north_italy,Lombardia,Milano,Milano,Find Decision Maker,88,79,Ready for Outreach,Medical Director,Clinical fit training and patient-development support,Medical-setting signal observed,Silhouette / Body Contouring
+Andrea Conti,Regional Public Utility,Italy,EU,Government / Public Sector,1800,Institutional Partnership,300000,5,Eduardo,,,,,,,,,,,,,,
+Giulia Rossi,Verona Aesthetic Territory Demo,Italy,EU,Medical Aesthetics,18,Prospecting,100000,,Eduardo,medical_aesthetics,it_north_medical_aesthetics,deleo_north_italy,Veneto,Verona,Verona,Find Decision Maker,91,90,Ready for Field Visit,Clinic Owner,Technology portfolio training service and business-case discussion,Medical-setting signal observed,Skin / Regeneration
+Lukas Hofer,Bozen Aesthetic Territory Demo,Italy,EU,Medical Aesthetics,15,Prospecting,85000,,Eduardo,medical_aesthetics,it_north_medical_aesthetics,deleo_north_italy,Trentino-Alto Adige,Bolzano / Bozen,Bozen,Research & Enrich,82,64,Verify Contact,Aesthetic Physician,Validate treatment mix and preferred outreach language,Medical-setting signal observed,Skin / Regeneration
