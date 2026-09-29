@@ -1,3 +1,6 @@
+import pandas as pd
+
+from field_planner import build_field_day_plan
 from outreach_generator import (
     build_outreach_strategy,
     normalize_lead,
@@ -292,3 +295,85 @@ def test_south_tyrol_adds_language_verification_note():
     strategy = build_outreach_strategy(lead)
     assert "German" in strategy["territory_language_note"]
     assert "Italian" in strategy["territory_language_note"]
+
+
+def test_field_day_plan_prioritizes_ready_visit_accounts():
+    dataframe = pd.DataFrame(
+        [
+            {
+                "company": "Research Account",
+                "contact_name": "",
+                "territory_profile_id": "it_north_medical_aesthetics",
+                "territory_region": "Lombardia",
+                "territory_province": "Bergamo",
+                "territory_city": "Bergamo",
+                "territory_status": "Find Decision Maker",
+                "contact_status": "",
+                "priority": "High",
+                "account_opportunity_score": 90,
+                "contact_readiness_score": 0,
+                "score": 85,
+                "linkedin_url": "",
+            },
+            {
+                "company": "Visit Ready Account",
+                "contact_name": "Dr. Rossi",
+                "territory_profile_id": "it_north_medical_aesthetics",
+                "territory_region": "Lombardia",
+                "territory_province": "Bergamo",
+                "territory_city": "Bergamo",
+                "territory_status": "Find Decision Maker",
+                "contact_status": "Ready for Field Visit",
+                "priority": "High",
+                "account_opportunity_score": 88,
+                "contact_readiness_score": 92,
+                "score": 82,
+                "linkedin_url": "https://www.linkedin.com/in/example",
+            },
+        ]
+    )
+
+    plan = build_field_day_plan(
+        dataframe,
+        region="Lombardia",
+        province="Bergamo",
+        max_accounts=5,
+    )
+
+    assert plan.iloc[0]["company"] == "Visit Ready Account"
+    assert plan.iloc[0]["visit_order"] == 1
+
+
+def test_field_day_plan_is_cluster_filterable():
+    dataframe = pd.DataFrame(
+        [
+            {
+                "company": "Milano Account",
+                "territory_profile_id": "it_north_medical_aesthetics",
+                "territory_region": "Lombardia",
+                "territory_province": "Milano",
+                "territory_city": "Milano",
+                "priority": "High",
+                "contact_status": "Ready for Outreach",
+            },
+            {
+                "company": "Verona Account",
+                "territory_profile_id": "it_north_medical_aesthetics",
+                "territory_region": "Veneto",
+                "territory_province": "Verona",
+                "territory_city": "Verona",
+                "priority": "High",
+                "contact_status": "Ready for Field Visit",
+            },
+        ]
+    )
+
+    plan = build_field_day_plan(
+        dataframe,
+        region="Veneto",
+        province="Verona",
+        max_accounts=5,
+    )
+
+    assert len(plan) == 1
+    assert plan.iloc[0]["company"] == "Verona Account"
