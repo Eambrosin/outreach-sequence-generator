@@ -113,6 +113,26 @@ The engine does not make clinical or regulatory conclusions. It carries upstream
 
 ---
 
+## Enriched Account Context
+
+ENGAGE preserves Account Enrichment evidence from the integrated Commercial Intelligence pipeline.
+
+When available, the account workspace and Field Day Planner can use:
+
+- direct account website
+- public address
+- public phone
+- public email
+- enrichment status
+- Account Data Completeness
+- public decision-maker candidate and LinkedIn evidence
+
+The Field Day Planner exports enriched visit details alongside territory, priority and contact-readiness context.
+
+Public account and professional-profile data should still be verified before outreach or field execution.
+
+---
+
 ## Territory Execution
 
 When upstream data contains Territory Intelligence metadata, ENGAGE becomes a lightweight field-sales execution layer.
