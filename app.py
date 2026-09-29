@@ -5,6 +5,7 @@ from pathlib import Path
 import pandas as pd
 import streamlit as st
 
+from field_planner import build_field_day_plan
 from outreach_generator import (
     COUNTRY_PROFILE,
     DEFAULT_PROFILE,
@@ -812,6 +813,83 @@ if not territory_df.empty:
             use_container_width=True,
             hide_index=True,
         )
+
+    with st.expander("🚗 Field Day Planner", expanded=False):
+        st.caption(
+            "Builds a ranked visit shortlist inside one geographic cluster. "
+            "It does not claim to optimize driving routes or travel time."
+        )
+
+        field_regions = sorted(
+            value
+            for value in territory_df.get(
+                "territory_region",
+                pd.Series(dtype=str),
+            ).dropna().astype(str).unique().tolist()
+            if value.strip()
+        )
+
+        field_region = st.selectbox(
+            "Field region",
+            options=["All"] + field_regions,
+            key="field_day_region",
+        )
+
+        province_source = territory_df
+        if field_region != "All" and "territory_region" in territory_df.columns:
+            province_source = territory_df[
+                territory_df["territory_region"].astype(str) == field_region
+            ]
+
+        field_provinces = sorted(
+            value
+            for value in province_source.get(
+                "territory_province",
+                pd.Series(dtype=str),
+            ).dropna().astype(str).unique().tolist()
+            if value.strip()
+        )
+
+        field_province = st.selectbox(
+            "Field province",
+            options=["All"] + field_provinces,
+            key="field_day_province",
+        )
+
+        field_max_accounts = st.slider(
+            "Maximum visits",
+            min_value=2,
+            max_value=8,
+            value=5,
+            key="field_day_max_accounts",
+        )
+
+        field_plan = build_field_day_plan(
+            territory_df,
+            region="" if field_region == "All" else field_region,
+            province="" if field_province == "All" else field_province,
+            max_accounts=field_max_accounts,
+        )
+
+        if field_plan.empty:
+            st.info(
+                "No territory accounts match the selected field-day filters."
+            )
+        else:
+            st.dataframe(
+                field_plan,
+                use_container_width=True,
+                hide_index=True,
+                column_config={
+                    "linkedin_url": st.column_config.LinkColumn("LinkedIn"),
+                },
+            )
+            st.download_button(
+                "⬇ Download Field Day Plan",
+                field_plan.to_csv(index=False).encode("utf-8"),
+                file_name="territory_field_day_plan.csv",
+                mime="text/csv",
+            )
 
 
 # ---------------------------------------------------------------------
