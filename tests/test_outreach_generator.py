@@ -1,9 +1,13 @@
+import os
+from unittest.mock import patch
+
 import pandas as pd
 
 from field_planner import build_field_day_plan
 from outreach_generator import (
     build_outreach_strategy,
     generate_local_sequence,
+    generate_sequence,
     normalize_lead,
     select_available_channel,
 )
@@ -578,3 +582,66 @@ def test_local_italian_medical_aesthetics_sequence_is_qualification_first():
     assert "valutate nuove tecnologie" in sequence["day_1"]["message"].lower()
     assert "opportunità relative a alessandra cecchini" not in sequence["day_1"]["message"].lower()
     assert "valuta direttamente" in sequence["day_7"]["message"].lower()
+
+
+
+def test_generate_sequence_falls_back_end_to_end_for_alessandra_handoff_v2():
+    row = {
+        "schema_version": "2.0",
+        "source_stage": "IDENTIFY_CONTACT_VALIDATED",
+        "contact_name": "Alessandra Cecchini",
+        "company": "Alessandra Cecchini",
+        "country": "Italy",
+        "industry": "Medical Aesthetics",
+        "deal_type": "Prospecting",
+        "deal_value_usd": 0,
+        "deal_value_status": "unknown",
+        "engagement_signal": "cold",
+        "engagement_status": "unverified",
+        "score": 76.8,
+        "account_opportunity_score": 76.8,
+        "qualification_readiness_score": 90,
+        "qualification_readiness_status": "Ready for Qualification",
+        "sales_motion": "Ready for Qualification Outreach",
+        "buyer_access_status": "Practitioner candidate + public contact path observed",
+        "commercial_hypothesis": "Alessandra Cecchini appears worth commercial qualification.",
+        "commercial_angle": "Lead with the market value proposition and validate fit.",
+        "next_best_action": "Use the observed public contact path to open a qualification-first conversation.",
+        "qualification_questions": "Do you personally evaluate and approve new technologies/equipment for the practice?",
+        "sales_evidence_gaps": "decision authority / purchasing role | practice scale / operating footprint | current treatment / technology portfolio | timing / active buying context",
+        "commercial_risk_flags": "decision-maker authority is not verified | active buying context has not been established",
+        "linkedin_url": "https://it.linkedin.com/in/alessandra-cecchini",
+        "contact_headline": "Chirurgo estetico - Loconlus ONLUS",
+        "professional_role_signal": "chirurgo estetico",
+        "location_match_evidence": "milano, lombardia",
+        "public_contact_form": True,
+        "territory_region": "Lombardia",
+        "territory_province": "Milano",
+        "territory_city": "Milano",
+        "territory_status": "Strong Territory Prospect",
+        "contact_readiness_score": 93.2,
+        "contact_status": "Ready for Outreach",
+    }
+
+    profile = {
+        "language": "Italian",
+        "channel": "WhatsApp",
+        "tone": "warm, polished and professional",
+    }
+
+    with patch.dict(os.environ, {"ANTHROPIC_API_KEY": ""}, clear=False):
+        sequence = generate_sequence(row, profile)
+
+    assert set(sequence.keys()) == {
+        "day_1",
+        "day_3",
+        "day_7",
+        "day_14",
+    }
+    assert sequence["day_1"]["channel"] == "LinkedIn"
+    assert sequence["day_1"]["subject"] == ""
+    assert "Buongiorno Alessandra Cecchini" in sequence["day_1"]["message"]
+    assert "valutate nuove tecnologie" in sequence["day_1"]["message"].lower()
+    assert sequence["day_3"]["timing"] == "Day +3"
+    assert sequence["day_7"]["timing"] == "Day +8"
+    assert sequence["day_14"]["timing"] == "Day +16"
