@@ -134,6 +134,47 @@ def render_card(
     )
 
 
+def render_status_card(
+    label,
+    value,
+    caption="",
+):
+    with st.container(border=True):
+        st.caption(label)
+        st.markdown(
+            f"**{optional(value, 'Not provided')}**"
+        )
+        if caption:
+            st.caption(caption)
+
+
+def split_pipe_values(value):
+    return [
+        item.strip()
+        for item in str(value or "").split(" | ")
+        if item.strip()
+    ]
+
+
+def render_list_card(
+    title,
+    value,
+    icon="📌",
+):
+    items = split_pipe_values(value)
+
+    st.markdown(
+        f"#### {icon} {title}"
+    )
+
+    with st.container(border=True):
+        if not items:
+            st.write("Not provided")
+        else:
+            for item in items:
+                st.markdown(f"- {item}")
+
+
 def sequence_to_text(
     company,
     sequence,
@@ -1252,7 +1293,7 @@ st.divider()
 
 
 st.subheader(
-    "🧩 Outreach Intelligence Workspace"
+    "🧩 Account & Outreach Intelligence Workspace"
 )
 
 
@@ -1589,22 +1630,27 @@ if (
     )
 
     uq1, uq2, uq3 = st.columns(3)
-    uq1.metric(
-        "Qualification Readiness",
-        (
-            f"{lead['qualification_readiness_score']:.0f}/100"
-            if lead.get("qualification_readiness_score")
-            else "N/A"
-        ),
-    )
-    uq2.metric(
-        "Sales Motion",
-        optional(lead.get("sales_motion"), "Not provided"),
-    )
-    uq3.metric(
-        "Buyer Access",
-        optional(lead.get("buyer_access_status"), "Not provided"),
-    )
+    with uq1:
+        st.metric(
+            "Qualification Readiness",
+            (
+                f"{lead['qualification_readiness_score']:.0f}/100"
+                if lead.get("qualification_readiness_score")
+                else "N/A"
+            ),
+        )
+    with uq2:
+        render_status_card(
+            "Sales Motion",
+            lead.get("sales_motion"),
+            "Internal execution stage carried forward from IDENTIFY.",
+        )
+    with uq3:
+        render_status_card(
+            "Buyer Access",
+            lead.get("buyer_access_status"),
+            "Observed public access path; authority may still require validation.",
+        )
 
     intel_left, intel_right = st.columns(2)
 
@@ -1632,21 +1678,21 @@ if (
 
     with intel_right:
         if lead.get("sales_evidence_gaps"):
-            render_card(
+            render_list_card(
                 "Evidence Gaps To Validate",
                 lead["sales_evidence_gaps"],
                 "🔍",
             )
 
         if lead.get("qualification_questions"):
-            render_card(
+            render_list_card(
                 "Qualification Questions",
-                lead["qualification_questions"].replace(" | ", "\n• "),
+                lead["qualification_questions"],
                 "❓",
             )
 
         if lead.get("commercial_risk_flags"):
-            render_card(
+            render_list_card(
                 "Validation Flags",
                 lead["commercial_risk_flags"],
                 "⚠️",
@@ -1864,7 +1910,7 @@ st.divider()
 
 
 st.subheader(
-    "✍️ Adaptive Sequence Generator"
+    "✍️ Adaptive Outreach Sequence"
 )
 
 
@@ -2014,6 +2060,10 @@ if sequence_status:
         st.success(
             sequence_status
         )
+        st.caption(
+            "Prospect-facing copy is generated from observed evidence and open "
+            "qualification questions. Internal scores and readiness labels are not exposed."
+        )
 
 
 # ---------------------------------------------------------------------
@@ -2140,21 +2190,44 @@ if (
     )
 
 
-    st.download_button(
-
-        "⬇ Download Outreach Sequence",
-
-        output_text,
-
-        file_name=(
-            f"{safe_filename(lead['company'])}"
-            "_adaptive_outreach_sequence.txt"
-        ),
-
-        mime=(
-            "text/plain"
-        ),
+    sequence_rows = pd.DataFrame(
+        [
+            {
+                "timing": data.get("timing", ""),
+                "label": data.get("label", ""),
+                "channel": data.get("channel", ""),
+                "subject": data.get("subject", ""),
+                "message": data.get("message", ""),
+            }
+            for data in sequence.values()
+        ]
     )
+
+    download_text_col, download_csv_col = st.columns(2)
+
+    with download_text_col:
+        st.download_button(
+            "⬇ Download Sequence — TXT",
+            output_text,
+            file_name=(
+                f"{safe_filename(lead['company'])}"
+                "_adaptive_outreach_sequence.txt"
+            ),
+            mime="text/plain",
+            use_container_width=True,
+        )
+
+    with download_csv_col:
+        st.download_button(
+            "⬇ Download Sequence — CSV",
+            sequence_rows.to_csv(index=False).encode("utf-8"),
+            file_name=(
+                f"{safe_filename(lead['company'])}"
+                "_adaptive_outreach_sequence.csv"
+            ),
+            mime="text/csv",
+            use_container_width=True,
+        )
 
 
 # ---------------------------------------------------------------------
@@ -2166,5 +2239,5 @@ st.divider()
 
 st.caption(
     "Commercial Intelligence workflow: "
-    "Qualify → Prioritize → Engage → Learn → Advance"
+    "IDENTIFY → PRIORITIZE → ENGAGE → LEARN → ADVANCE"
 )
