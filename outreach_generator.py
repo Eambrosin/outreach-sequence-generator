@@ -316,6 +316,19 @@ def safe_float(
         )
 
 
+def safe_bool(value, default=False):
+    if value is None:
+        return bool(default)
+    try:
+        if pd.isna(value):
+            return bool(default)
+    except Exception:
+        pass
+    return str(value).strip().lower() in {
+        "true", "1", "yes", "y", "on"
+    }
+
+
 def normalize_lead(
     row,
 ):
@@ -641,6 +654,122 @@ def normalize_lead(
         "decision_maker_confidence": str(
             first_value(row, ["decision_maker_confidence"], "")
         ).strip(),
+
+        "decision_maker_relevance_score": safe_float(
+            first_value(row, ["decision_maker_relevance_score"], 0),
+            0,
+        ),
+
+        "discovery_score": safe_float(
+            first_value(row, ["discovery_score"], 0),
+            0,
+        ),
+
+        "deal_value_status": str(
+            first_value(row, ["deal_value_status"], "")
+        ).strip(),
+
+        "engagement_status": str(
+            first_value(row, ["engagement_status"], "")
+        ).strip(),
+
+        "contact_outreach_angle": str(
+            first_value(row, ["contact_outreach_angle"], "")
+        ).strip(),
+
+        "contact_relevance_score": safe_float(
+            first_value(row, ["contact_relevance_score"], 0),
+            0,
+        ),
+
+        "contact_confidence": str(
+            first_value(row, ["contact_confidence"], "")
+        ).strip(),
+
+        "professional_role_signal": str(
+            first_value(row, ["professional_role_signal"], "")
+        ).strip(),
+
+        "location_match_evidence": str(
+            first_value(row, ["location_match_evidence"], "")
+        ).strip(),
+
+        "contact_match_rationale": str(
+            first_value(row, ["contact_match_rationale"], "")
+        ).strip(),
+
+        "account_type": str(
+            first_value(row, ["account_type"], "")
+        ).strip(),
+
+        "commercial_track": str(
+            first_value(row, ["commercial_track"], "")
+        ).strip(),
+
+        "qualification_readiness_score": safe_float(
+            first_value(row, ["qualification_readiness_score"], 0),
+            0,
+        ),
+
+        "qualification_readiness_status": str(
+            first_value(row, ["qualification_readiness_status"], "")
+        ).strip(),
+
+        "qualification_readiness_evidence": str(
+            first_value(row, ["qualification_readiness_evidence"], "")
+        ).strip(),
+
+        "sales_motion": str(
+            first_value(row, ["sales_motion"], "")
+        ).strip(),
+
+        "buyer_access_status": str(
+            first_value(row, ["buyer_access_status"], "")
+        ).strip(),
+
+        "commercial_hypothesis": str(
+            first_value(row, ["commercial_hypothesis"], "")
+        ).strip(),
+
+        "commercial_angle": str(
+            first_value(row, ["commercial_angle"], "")
+        ).strip(),
+
+        "next_best_action": str(
+            first_value(row, ["next_best_action"], "")
+        ).strip(),
+
+        "qualification_questions": str(
+            first_value(row, ["qualification_questions"], "")
+        ).strip(),
+
+        "sales_evidence_gaps": str(
+            first_value(row, ["sales_evidence_gaps"], "")
+        ).strip(),
+
+        "commercial_risk_flags": str(
+            first_value(row, ["commercial_risk_flags"], "")
+        ).strip(),
+
+        "sales_intelligence_basis": str(
+            first_value(row, ["sales_intelligence_basis"], "")
+        ).strip(),
+
+        "public_contact_form": safe_bool(
+            first_value(row, ["public_contact_form"], False)
+        ),
+
+        "primary_evidence_url": str(
+            first_value(row, ["primary_evidence_url"], "")
+        ).strip(),
+
+        "enrichment_evidence_url": str(
+            first_value(row, ["enrichment_evidence_url"], "")
+        ).strip(),
+
+        "vendor_company": str(
+            first_value(row, ["vendor_company"], "")
+        ).strip(),
     }
 
     lead[
@@ -654,6 +783,8 @@ def normalize_lead(
         or lead[
             "score_rationale"
         ]
+        or lead["sales_motion"]
+        or lead["qualification_readiness_status"]
     )
 
     lead[
@@ -745,6 +876,42 @@ def commercial_priority(
 # ----------------------------------------------------------------------
 # 4. ADAPTIVE OUTREACH STRATEGY
 # ----------------------------------------------------------------------
+
+def select_available_channel(lead, profile):
+    default_channel = profile.get("channel", "Email")
+    has_phone = bool(lead.get("public_phone"))
+    has_email = bool(lead.get("public_email"))
+    has_linkedin = bool(lead.get("linkedin_url"))
+    has_contact_form = bool(lead.get("public_contact_form"))
+
+    if default_channel == "Email+WhatsApp":
+        if has_email and has_phone:
+            return "Email+WhatsApp"
+        if has_email:
+            return "Email"
+        if has_phone:
+            return "WhatsApp"
+
+    if default_channel == "WhatsApp" and has_phone:
+        return "WhatsApp"
+
+    if default_channel == "Email" and has_email:
+        return "Email"
+
+    if has_linkedin:
+        return "LinkedIn"
+
+    if has_email:
+        return "Email"
+
+    if has_contact_form:
+        return "Website Contact Form"
+
+    if has_phone:
+        return "WhatsApp"
+
+    return default_channel
+
 
 def build_outreach_strategy(
     lead,
@@ -865,6 +1032,48 @@ def build_outreach_strategy(
             "low-touch"
         )
 
+    sales_motion = lead.get("sales_motion", "")
+    sales_gaps = lead.get("sales_evidence_gaps", "")
+    next_best_action = lead.get("next_best_action", "")
+
+    if (
+        stage == "prospecting"
+        and sales_motion == "Ready for Qualification Outreach"
+        and engagement != "hot"
+    ):
+        cadence_days = [0, 3, 8, 16]
+        intensity = "qualification-first"
+        objective = (
+            "Open a qualification-first conversation using observed public evidence. "
+            "Validate decision authority, current treatment/technology portfolio, timing "
+            "and commercial scope before making a specific solution recommendation."
+        )
+
+    elif (
+        stage == "prospecting"
+        and sales_motion == "Prepare Qualification Outreach"
+    ):
+        cadence_days = [0, 4, 10, 21]
+        intensity = "measured qualification"
+        objective = (
+            "Establish a reliable contact path and validate the remaining account evidence "
+            "before progressing to a specific commercial proposal."
+        )
+
+    if sales_gaps:
+        objective += (
+            " Open evidence gaps to validate: "
+            + sales_gaps
+            + "."
+        )
+
+    if next_best_action:
+        objective += (
+            " Upstream next best action: "
+            + next_best_action
+            + "."
+        )
+
     # Aged proposal
     if (
         stage == "post_proposal"
@@ -916,8 +1125,11 @@ def build_outreach_strategy(
 
     territory_status = lead.get("territory_status", "")
     contact_status = lead.get("contact_status", "")
+    primary_channel = select_available_channel(lead, profile)
 
-    if contact_status == "Ready for Field Visit":
+    if sales_motion == "Ready for Qualification Outreach":
+        field_motion = "Qualification outreach candidate"
+    elif contact_status == "Ready for Field Visit":
         field_motion = "Field visit candidate"
     elif contact_status == "Ready for Outreach":
         field_motion = "Personalized outreach before visit"
@@ -1032,9 +1244,7 @@ def build_outreach_strategy(
         ),
 
         "primary_channel": (
-            profile[
-                "channel"
-            ]
+            primary_channel
         ),
 
         "tone": (
@@ -1068,11 +1278,15 @@ def build_outreach_strategy(
 def channel_for_touch(
     profile,
     touch_number,
+    primary_channel=None,
 ):
 
-    channel = profile[
-        "channel"
-    ]
+    channel = (
+        primary_channel
+        or profile[
+            "channel"
+        ]
+    )
 
     if channel == "Email+WhatsApp":
 
@@ -1093,6 +1307,18 @@ def channel_note(
         return (
             "Keep it short, conversational and professional. "
             "No subject line. Aim for 3 to 6 short lines."
+        )
+
+    if channel == "LinkedIn":
+        return (
+            "Write a concise LinkedIn message. No subject line. "
+            "Use observed professional context only and ask one low-pressure qualification question."
+        )
+
+    if channel == "Website Contact Form":
+        return (
+            "Write a concise website contact-form message. "
+            "Do not assume a direct email relationship."
         )
 
     return (
@@ -1170,6 +1396,62 @@ def internal_context(
                 "commercial_objective"
             ]
         ),
+
+        "qualification_readiness_status": lead.get(
+            "qualification_readiness_status", ""
+        ),
+
+        "sales_motion": lead.get(
+            "sales_motion", ""
+        ),
+
+        "buyer_access_status": lead.get(
+            "buyer_access_status", ""
+        ),
+
+        "commercial_hypothesis": lead.get(
+            "commercial_hypothesis", ""
+        ),
+
+        "commercial_angle": lead.get(
+            "commercial_angle", ""
+        ),
+
+        "next_best_action": lead.get(
+            "next_best_action", ""
+        ),
+
+        "qualification_questions": lead.get(
+            "qualification_questions", ""
+        ),
+
+        "sales_evidence_gaps": lead.get(
+            "sales_evidence_gaps", ""
+        ),
+
+        "commercial_risk_flags": lead.get(
+            "commercial_risk_flags", ""
+        ),
+
+        "observed_technology_axes": lead.get(
+            "observed_technology_axes", ""
+        ),
+
+        "contact_headline": lead.get(
+            "contact_headline", ""
+        ),
+
+        "professional_role_signal": lead.get(
+            "professional_role_signal", ""
+        ),
+
+        "location_match_evidence": lead.get(
+            "location_match_evidence", ""
+        ),
+
+        "account_website": lead.get(
+            "account_website", ""
+        ),
     }
 
     return json.dumps(
@@ -1239,6 +1521,7 @@ def generate_sequence(
             channel_for_touch(
                 profile,
                 index,
+                strategy.get("primary_channel"),
             )
         )
 
@@ -1293,8 +1576,8 @@ COMMUNICATION PROFILE
 Language:
 {profile['language']}
 
-Default Channel:
-{profile['channel']}
+Available Primary Channel:
+{strategy['primary_channel']}
 
 Tone:
 {profile['tone']}
@@ -1316,6 +1599,9 @@ Never expose to the prospect:
 - internal priority
 - score rationale
 - scoring methodology
+- qualification-readiness score or status
+- internal Sales Motion labels
+- internal evidence-gap labels
 
 Do not invent:
 
@@ -1329,6 +1615,14 @@ Do not invent:
 
 If something is not confirmed by the supplied data,
 frame it as a question or hypothesis.
+
+Use confirmed public evidence only for personalization.
+Treat qualification questions and evidence gaps as questions to validate,
+not as facts about the prospect.
+
+Do not claim that the prospect is actively buying, replacing equipment,
+has a budget, is dissatisfied with a provider, or wants a specific device
+unless that fact is explicitly supplied.
 
 
 OUTREACH STRATEGY
@@ -1573,7 +1867,7 @@ def apply_strategy_metadata(
             message[
                 "channel"
             ]
-            == "WhatsApp"
+            in {"WhatsApp", "LinkedIn"}
         ):
 
             message[
