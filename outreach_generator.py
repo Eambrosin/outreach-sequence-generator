@@ -1119,7 +1119,7 @@ def build_outreach_strategy(
         )
     )
 
-    if recommended_action:
+    if recommended_action and recommended_action != next_best_action:
 
         objective += (
             " Internal recommendation: "
