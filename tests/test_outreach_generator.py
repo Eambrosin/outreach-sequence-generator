@@ -3,7 +3,9 @@ import pandas as pd
 from field_planner import build_field_day_plan
 from outreach_generator import (
     build_outreach_strategy,
+    generate_local_sequence,
     normalize_lead,
+    select_available_channel,
 )
 
 
@@ -439,3 +441,140 @@ def test_field_day_plan_preserves_enriched_visit_details():
     assert row["public_phone"] == "+39 02 1234 5678"
     assert row["account_website"] == "https://exampleclinic.it"
     assert row["enrichment_status"] == "Enriched"
+
+
+def test_evidence_aware_handoff_v2_is_preserved():
+    lead = normalize_lead(
+        {
+            "schema_version": "2.0",
+            "source_stage": "IDENTIFY_CONTACT_VALIDATED",
+            "contact_name": "Alessandra Cecchini",
+            "company": "Alessandra Cecchini",
+            "country": "Italy",
+            "industry": "Medical Aesthetics",
+            "score": 76.8,
+            "account_opportunity_score": 76.8,
+            "qualification_readiness_score": 85,
+            "qualification_readiness_status": "Ready for Qualification",
+            "sales_motion": "Ready for Qualification Outreach",
+            "buyer_access_status": "Practitioner candidate + public contact path observed",
+            "commercial_hypothesis": "Public evidence supports commercial qualification.",
+            "commercial_angle": "Qualification-first conversation.",
+            "next_best_action": "Verify purchasing authority and current portfolio.",
+            "qualification_questions": "Do you evaluate new technologies?",
+            "sales_evidence_gaps": "decision authority / purchasing role | timing / active buying context",
+            "public_contact_form": True,
+            "linkedin_url": "https://it.linkedin.com/in/alessandra-cecchini",
+            "professional_role_signal": "chirurgo estetico",
+            "location_match_evidence": "milano, lombardia",
+        }
+    )
+
+    assert lead["schema_version"] == "2.0"
+    assert lead["sales_motion"] == "Ready for Qualification Outreach"
+    assert lead["qualification_readiness_score"] == 85
+    assert lead["public_contact_form"] is True
+    assert lead["professional_role_signal"] == "chirurgo estetico"
+    assert lead["commercial_intelligence_mode"] is True
+
+
+def test_verified_available_channel_prefers_linkedin_over_unverified_whatsapp():
+    lead = normalize_lead(
+        {
+            "company": "Alessandra Cecchini",
+            "country": "Italy",
+            "industry": "Medical Aesthetics",
+            "linkedin_url": "https://it.linkedin.com/in/alessandra-cecchini",
+            "public_contact_form": True,
+            "public_phone": "",
+            "public_email": "",
+        }
+    )
+
+    channel = select_available_channel(
+        lead,
+        {"channel": "WhatsApp", "language": "Italian", "tone": "professional"},
+    )
+
+    assert channel == "LinkedIn"
+
+
+def test_contact_form_is_used_when_no_direct_or_linkedin_channel_exists():
+    lead = normalize_lead(
+        {
+            "company": "Example Practice",
+            "country": "Italy",
+            "industry": "Medical Aesthetics",
+            "public_contact_form": True,
+        }
+    )
+
+    channel = select_available_channel(
+        lead,
+        {"channel": "WhatsApp", "language": "Italian", "tone": "professional"},
+    )
+
+    assert channel == "Website Contact Form"
+
+
+def test_ready_qualification_motion_uses_measured_linkedin_cadence():
+    lead = normalize_lead(
+        {
+            "contact_name": "Alessandra Cecchini",
+            "company": "Alessandra Cecchini",
+            "country": "Italy",
+            "industry": "Medical Aesthetics",
+            "score": 76.8,
+            "engagement_signal": "cold",
+            "engagement_status": "unverified",
+            "sales_motion": "Ready for Qualification Outreach",
+            "sales_evidence_gaps": (
+                "decision authority / purchasing role | "
+                "current treatment / technology portfolio | "
+                "timing / active buying context"
+            ),
+            "next_best_action": (
+                "Use the observed public contact path to open a qualification-first conversation."
+            ),
+            "linkedin_url": "https://it.linkedin.com/in/alessandra-cecchini",
+            "public_contact_form": True,
+        }
+    )
+
+    strategy = build_outreach_strategy(lead)
+
+    assert strategy["primary_channel"] == "LinkedIn"
+    assert strategy["intensity"] == "qualification-first"
+    assert strategy["cadence_days"] == [0, 3, 8, 16]
+    assert "qualification-first" in strategy["commercial_objective"].lower()
+    assert "active buying context" in strategy["commercial_objective"].lower()
+
+
+def test_local_italian_medical_aesthetics_sequence_is_qualification_first():
+    lead = normalize_lead(
+        {
+            "contact_name": "Alessandra Cecchini",
+            "company": "Alessandra Cecchini",
+            "country": "Italy",
+            "industry": "Medical Aesthetics",
+            "score": 76.8,
+            "sales_motion": "Ready for Qualification Outreach",
+            "linkedin_url": "https://it.linkedin.com/in/alessandra-cecchini",
+            "territory_city": "Milano",
+            "public_contact_form": True,
+        }
+    )
+
+    profile = {
+        "language": "Italian",
+        "channel": "WhatsApp",
+        "tone": "warm, polished and professional",
+    }
+    strategy = build_outreach_strategy(lead, profile)
+    sequence = generate_local_sequence(lead, profile, strategy)
+
+    assert sequence["day_1"]["channel"] == "LinkedIn"
+    assert sequence["day_1"]["subject"] == ""
+    assert "valutate nuove tecnologie" in sequence["day_1"]["message"].lower()
+    assert "opportunità relative a alessandra cecchini" not in sequence["day_1"]["message"].lower()
+    assert "valuta direttamente" in sequence["day_7"]["message"].lower()
