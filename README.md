@@ -113,6 +113,28 @@ The engine does not make clinical or regulatory conclusions. It carries upstream
 
 ---
 
+## Evidence-Aware Handoff v2
+
+ENGAGE can consume the v2 handoff exported by Opportunity Discovery Intelligence after public-contact validation.
+
+The handoff preserves:
+
+- Account Opportunity and Qualification Readiness
+- Sales Motion and Buyer Access status
+- commercial hypothesis and evidence-based commercial angle
+- next best action
+- qualification questions and open evidence gaps
+- public account website and contact-form evidence
+- validated public LinkedIn profile candidate
+- contact relevance, role and location-match evidence
+- observed technology axes without inferring purchase intent
+
+For prospecting, this lets ENGAGE distinguish an account that is merely interesting from one that is sufficiently researched for a **qualification-first conversation**.
+
+When a country-level channel default is not actually available, ENGAGE now prefers an observed channel. For example, an Italian account with no public phone or email but a validated LinkedIn profile will use LinkedIn rather than assuming WhatsApp availability.
+
+---
+
 ## Enriched Account Context
 
 ENGAGE preserves Account Enrichment evidence from the integrated Commercial Intelligence pipeline.
@@ -360,6 +382,10 @@ GitHub Actions validates Python syntax and runs the test suite on pushes and pul
 ---
 
 ## Current Version
+
+### v2.1.0
+
+Version 2.1 adds the evidence-aware IDENTIFY → ENGAGE handoff, channel-availability logic, Qualification Readiness / Sales Motion context and qualification-first Medical Aesthetics outreach.
 
 ### v2.0.0
 
