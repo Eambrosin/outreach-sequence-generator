@@ -10,6 +10,7 @@ from outreach_generator import (
     COUNTRY_PROFILE,
     DEFAULT_PROFILE,
     build_outreach_strategy,
+    generate_local_sequence,
     generate_sequence,
     normalize_lead,
 )
@@ -1893,31 +1894,126 @@ company_state_key = (
 )
 
 
+sequence_status_key = (
+    "generated_outreach_status"
+)
+
+
 if st.button(
     "Generate Adaptive Outreach Sequence",
     type="primary",
+    use_container_width=True,
 ):
 
-    with st.spinner(
-        "Generating outreach sequence..."
-    ):
+    try:
 
-        sequence = generate_sequence(
-            lead,
-            profile,
+        with st.spinner(
+            "Generating outreach sequence..."
+        ):
+
+            if ai_enabled:
+
+                sequence = generate_sequence(
+                    lead,
+                    profile,
+                )
+
+            else:
+
+                sequence = generate_local_sequence(
+                    lead,
+                    profile,
+                    strategy,
+                )
+
+        if (
+            not isinstance(sequence, dict)
+            or not sequence
+        ):
+
+            raise ValueError(
+                "The generator returned an empty sequence."
+            )
+
+        required_sequence_keys = {
+            "day_1",
+            "day_3",
+            "day_7",
+            "day_14",
+        }
+
+        missing_sequence_keys = (
+            required_sequence_keys
+            - set(sequence.keys())
+        )
+
+        if missing_sequence_keys:
+
+            raise ValueError(
+                "The generated sequence is missing: "
+                + ", ".join(
+                    sorted(missing_sequence_keys)
+                )
+            )
+
+        st.session_state[
+            sequence_state_key
+        ] = sequence
+
+        st.session_state[
+            company_state_key
+        ] = lead[
+            "company"
+        ]
+
+        st.session_state[
+            sequence_status_key
+        ] = (
+            f"Sequence generated successfully for {lead['company']}. "
+            "The four outreach touches are shown directly below."
+        )
+
+    except Exception as exc:
+
+        st.session_state.pop(
+            sequence_state_key,
+            None,
+        )
+
+        st.session_state.pop(
+            company_state_key,
+            None,
+        )
+
+        st.session_state[
+            sequence_status_key
+        ] = (
+            "ERROR: "
+            + str(exc)
         )
 
 
-    st.session_state[
-        sequence_state_key
-    ] = sequence
+sequence_status = st.session_state.get(
+    sequence_status_key,
+    "",
+)
 
 
-    st.session_state[
-        company_state_key
-    ] = lead[
-        "company"
-    ]
+if sequence_status:
+
+    if sequence_status.startswith(
+        "ERROR:"
+    ):
+
+        st.error(
+            sequence_status
+        )
+
+    else:
+
+        st.success(
+            sequence_status
+        )
 
 
 # ---------------------------------------------------------------------
