@@ -35,7 +35,7 @@ Portfolio-level view of pipeline value, commercial priority, country coverage an
 
 Ranks accounts using qualification context, engagement signals, deal value and outreach logic.
 
-### Account Intelligence Workspace
+### Account & Outreach Intelligence Workspace
 
 ![Account Intelligence](screenshots/v2-account-intelligence.png)
 
@@ -52,6 +52,33 @@ Cadence changes according to commercial priority and engagement rather than forc
 ![Generated Sequence](screenshots/v2-generated-sequence.png)
 
 Produces a four-touch sequence using the selected language, channel, cadence and commercial objective.
+
+---
+
+## Portfolio Demo Flow
+
+A concise interview/demo path is:
+
+1. Upload an **ENGAGE Handoff v2** exported from Opportunity Discovery Intelligence.
+2. Open the **Account & Outreach Intelligence Workspace**.
+3. Show the carried-forward Qualification Readiness, Sales Motion, Buyer Access, evidence gaps and qualification questions.
+4. Explain why the channel is selected from **observed availability**, not only from a country default.
+5. Show the adaptive cadence and the distinction between account attractiveness and buying intent.
+6. Generate the four-touch sequence.
+7. Show that internal scores and readiness labels are excluded from prospect-facing copy.
+8. Export the sequence as TXT or CSV.
+
+For the validated Medical Aesthetics example, the useful story is:
+
+> **A high-potential account does not automatically become an aggressive sales sequence. ENGAGE preserves uncertainty and creates a qualification-first motion using the public channel that actually exists.**
+
+Recommended screenshots:
+
+- Account & Outreach Intelligence Workspace
+- Upstream Qualification Intelligence
+- Adaptive Cadence
+- Commercial Decision Support
+- generated four-touch sequence
 
 ---
 
