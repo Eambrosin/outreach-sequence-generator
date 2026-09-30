@@ -473,7 +473,34 @@ account_data_completeness
 decision_maker_name
 decision_maker_headline
 decision_maker_linkedin
-decision_maker_confidence""",
+decision_maker_confidence
+
+Evidence-aware handoff v2
+schema_version
+source_stage
+account_type
+commercial_track
+qualification_readiness_score
+qualification_readiness_status
+qualification_readiness_evidence
+sales_motion
+buyer_access_status
+commercial_hypothesis
+commercial_angle
+next_best_action
+qualification_questions
+sales_evidence_gaps
+commercial_risk_flags
+sales_intelligence_basis
+contact_relevance_score
+contact_confidence
+professional_role_signal
+location_match_evidence
+contact_match_rationale
+contact_outreach_angle
+public_contact_form
+primary_evidence_url
+enrichment_evidence_url""",
             language="text",
         )
 
@@ -797,9 +824,17 @@ if not territory_df.empty:
         if "contact_status" in territory_df.columns else 0,
     )
     te4.metric(
-        "Find Decision Maker",
-        int((territory_df.get("territory_status", "") == "Find Decision Maker").sum())
-        if "territory_status" in territory_df.columns else 0,
+        "Qualification Outreach",
+        int(
+            (
+                territory_df.get(
+                    "sales_motion",
+                    pd.Series([""] * len(territory_df)),
+                )
+                == "Ready for Qualification Outreach"
+            ).sum()
+        )
+        if "sales_motion" in territory_df.columns else 0,
     )
     te5.metric(
         "Eligibility Validation",
@@ -1186,6 +1221,12 @@ overview_columns = [
 
     "contact_status",
 
+    "qualification_readiness_status",
+
+    "sales_motion",
+
+    "buyer_access_status",
+
     "mode",
 ]
 
@@ -1370,6 +1411,23 @@ with profile_col_1:
             f"{lead['public_email']}"
         )
 
+    if lead.get("public_contact_form"):
+        st.write(
+            "**Public Contact Form:** Observed on official website"
+        )
+
+    if lead.get("professional_role_signal"):
+        st.write(
+            f"**Observed Professional Role:** "
+            f"{lead['professional_role_signal']}"
+        )
+
+    if lead.get("location_match_evidence"):
+        st.write(
+            f"**Contact Location Match:** "
+            f"{lead['location_match_evidence']}"
+        )
+
     if lead.get("decision_maker_name"):
         st.write(
             f"**Decision-Maker Candidate:** "
@@ -1437,6 +1495,25 @@ with profile_col_2:
             f"{lead['contact_readiness_score']:.1f}"
         )
 
+    if lead.get("qualification_readiness_status"):
+        st.write(
+            f"**Qualification Readiness:** "
+            f"{lead['qualification_readiness_status']} "
+            f"({lead['qualification_readiness_score']:.0f}/100)"
+        )
+
+    if lead.get("sales_motion"):
+        st.write(
+            f"**Upstream Sales Motion:** "
+            f"{lead['sales_motion']}"
+        )
+
+    if lead.get("buyer_access_status"):
+        st.write(
+            f"**Buyer Access:** "
+            f"{lead['buyer_access_status']}"
+        )
+
 
 # ---------------------------------------------------------------------
 # OUTREACH STRATEGY
@@ -1492,6 +1569,90 @@ with profile_col_3:
 
         if strategy.get("territory_language_note"):
             st.caption(strategy["territory_language_note"])
+
+
+# ---------------------------------------------------------------------
+# UPSTREAM QUALIFICATION INTELLIGENCE
+# ---------------------------------------------------------------------
+
+if (
+    lead.get("sales_motion")
+    or lead.get("qualification_readiness_status")
+    or lead.get("commercial_hypothesis")
+):
+    st.divider()
+    st.subheader("🔎 Upstream Qualification Intelligence")
+    st.caption(
+        "Evidence and open questions carried forward from IDENTIFY. "
+        "These are internal execution inputs, not prospect-facing claims."
+    )
+
+    uq1, uq2, uq3 = st.columns(3)
+    uq1.metric(
+        "Qualification Readiness",
+        (
+            f"{lead['qualification_readiness_score']:.0f}/100"
+            if lead.get("qualification_readiness_score")
+            else "N/A"
+        ),
+    )
+    uq2.metric(
+        "Sales Motion",
+        optional(lead.get("sales_motion"), "Not provided"),
+    )
+    uq3.metric(
+        "Buyer Access",
+        optional(lead.get("buyer_access_status"), "Not provided"),
+    )
+
+    intel_left, intel_right = st.columns(2)
+
+    with intel_left:
+        if lead.get("commercial_hypothesis"):
+            render_card(
+                "Commercial Hypothesis",
+                lead["commercial_hypothesis"],
+                "🧩",
+            )
+
+        if lead.get("commercial_angle"):
+            render_card(
+                "Evidence-Based Commercial Angle",
+                lead["commercial_angle"],
+                "🧭",
+            )
+
+        if lead.get("next_best_action"):
+            render_card(
+                "Next Best Action",
+                lead["next_best_action"],
+                "🎯",
+            )
+
+    with intel_right:
+        if lead.get("sales_evidence_gaps"):
+            render_card(
+                "Evidence Gaps To Validate",
+                lead["sales_evidence_gaps"],
+                "🔍",
+            )
+
+        if lead.get("qualification_questions"):
+            render_card(
+                "Qualification Questions",
+                lead["qualification_questions"].replace(" | ", "\n• "),
+                "❓",
+            )
+
+        if lead.get("commercial_risk_flags"):
+            render_card(
+                "Validation Flags",
+                lead["commercial_risk_flags"],
+                "⚠️",
+            )
+
+    if lead.get("sales_intelligence_basis"):
+        st.caption(lead["sales_intelligence_basis"])
 
 
 # ---------------------------------------------------------------------
@@ -1616,6 +1777,13 @@ with decision_1:
             "Upstream Outreach Angle",
             lead["outreach_angle"],
             "🧭",
+        )
+
+    if lead.get("contact_outreach_angle"):
+        render_card(
+            "Contact-Specific Angle",
+            lead["contact_outreach_angle"],
+            "👤",
         )
 
 
