@@ -1,5 +1,16 @@
 # Changelog
 
+## v2.1.0 — Evidence-Aware ENGAGE Handoff
+
+- Added support for Opportunity Discovery Intelligence handoff schema v2.
+- Preserves Qualification Readiness, Sales Motion, Buyer Access, commercial hypothesis, next best action, qualification questions and evidence gaps.
+- Selects an observed outreach channel when the country default is unavailable.
+- Uses LinkedIn for validated public profiles when no public WhatsApp/email path exists.
+- Added qualification-first cadence for research-ready but unengaged prospecting accounts.
+- Added Medical Aesthetics deterministic outreach that asks validation questions rather than inferring buying intent.
+- Added an Upstream Qualification Intelligence workspace.
+- Preserves public contact-form evidence and contact identity/location signals.
+
 All notable changes to the Adaptive Outreach Intelligence Platform are documented here.
 
 ---
