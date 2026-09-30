@@ -1089,11 +1089,15 @@ def build_outreach_strategy(
         )
 
     if lead.get("industry") == "Medical Aesthetics" and stage == "prospecting":
-        objective = (
-            "Validate treatment portfolio, professional setting, technology fit, "
-            "training/service expectations and the decision process before proposing "
-            "a device-specific commercial next step."
+        medical_context = (
+            " In Medical Aesthetics, validate treatment portfolio, professional setting, "
+            "technology fit, training/service expectations and the decision process before "
+            "proposing a device-specific commercial next step."
         )
+        if sales_motion:
+            objective += medical_context
+        else:
+            objective = medical_context.strip()
 
         if "eligibility" in lead.get("professional_setting", "").lower():
             objective += (
@@ -1921,6 +1925,63 @@ def local_message(
         else ""
     )
 
+    if (
+        language == "Italian"
+        and lead.get("industry") == "Medical Aesthetics"
+        and stage == "prospecting"
+    ):
+        greeting = (
+            f"Buongiorno {name},"
+            if name
+            else "Buongiorno,"
+        )
+        location = (
+            lead.get("territory_city")
+            or lead.get("territory_province")
+            or ""
+        )
+        location_phrase = (
+            f" a {location}"
+            if location
+            else ""
+        )
+        templates = {
+            1: (
+                f"{greeting}\n\n"
+                f"ho visto la sua attività nell'ambito medico-estetico{location_phrase}. "
+                f"Le scrivo per capire se possa avere senso un breve confronto su come "
+                f"valutate nuove tecnologie e sul supporto necessario per integrarle "
+                f"nel portafoglio trattamenti.\n\n"
+                f"Se il tema rientra nelle sue responsabilità, mi farebbe piacere "
+                f"confrontarmi in modo molto concreto.\n\n"
+                f"Cordiali saluti,\n{sender}"
+            ),
+            2: (
+                f"{greeting}\n\n"
+                f"riprendo brevemente il contatto. Il mio obiettivo non è presumere "
+                f"un'esigenza specifica, ma capire quali trattamenti o tecnologie "
+                f"ricevano oggi maggiore attenzione nella sua pratica e quali aspetti "
+                f"di formazione, assistenza e supporto siano più importanti.\n\n"
+                f"Se utile, possiamo sentirci per pochi minuti.\n\n"
+                f"{sender}"
+            ),
+            3: (
+                f"{greeting}\n\n"
+                f"una domanda molto concreta per capire se il confronto ha senso: "
+                f"valuta direttamente l'introduzione di nuove tecnologie nella pratica "
+                f"o coinvolge altre figure nel processo decisionale?\n\n"
+                f"{sender}"
+            ),
+            4: (
+                f"{greeting}\n\n"
+                f"chiudo qui il follow-up per non essere insistente. "
+                f"Se il tema non è attuale, nessun problema; resto volentieri disponibile "
+                f"per riprenderlo quando sarà più pertinente.\n\n"
+                f"Cordiali saluti,\n{sender}"
+            ),
+        }
+        return templates[touch_number]
+
     if language == "Portuguese":
 
         greeting = (
@@ -2204,6 +2265,7 @@ def generate_local_sequence(
             channel_for_touch(
                 profile,
                 index,
+                strategy.get("primary_channel"),
             )
         )
 
