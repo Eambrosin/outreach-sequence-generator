@@ -17,12 +17,20 @@ COMMERCIAL_PRIORITY = {
     "Low": 1,
 }
 
+VISIT_PRIORITY = {
+    "Visit Now": 4,
+    "High Priority Visit": 3,
+    "Contact / Prepare First": 2,
+    "Research Before Visit": 1,
+}
+
 
 def build_field_day_plan(
     dataframe: pd.DataFrame,
     *,
     region: str = "",
     province: str = "",
+    city: str = "",
     max_accounts: int = 5,
 ) -> pd.DataFrame:
     """
@@ -51,6 +59,9 @@ def build_field_day_plan(
     if province and "territory_province" in df.columns:
         df = df[df["territory_province"].astype(str) == province]
 
+    if city and "territory_city" in df.columns:
+        df = df[df["territory_city"].astype(str) == city]
+
     if df.empty:
         return pd.DataFrame()
 
@@ -68,7 +79,17 @@ def build_field_day_plan(
         .fillna(0)
     )
 
+    df["_visit_rank"] = (
+        df.get("visit_priority", pd.Series([""] * len(df), index=df.index))
+        .astype(str)
+        .map(VISIT_PRIORITY)
+        .fillna(0)
+    )
+
     for column in [
+        "visit_priority_score",
+        "planning_opportunity_value_eur",
+        "product_fit_score",
         "account_opportunity_score",
         "contact_readiness_score",
         "score",
@@ -79,13 +100,16 @@ def build_field_day_plan(
 
     df = df.sort_values(
         [
+            "_visit_rank",
+            "visit_priority_score",
             "_status_rank",
             "_priority_rank",
             "contact_readiness_score",
             "account_opportunity_score",
+            "product_fit_score",
             "score",
         ],
-        ascending=[False, False, False, False, False],
+        ascending=[False, False, False, False, False, False, False, False],
     ).head(max_accounts)
 
     plan = pd.DataFrame(
@@ -103,8 +127,15 @@ def build_field_day_plan(
             "enrichment_status": df.get("enrichment_status", ""),
             "contact_status": df.get("contact_status", ""),
             "priority": df.get("priority", ""),
+            "visit_priority": df.get("visit_priority", ""),
+            "visit_priority_score": df.get("visit_priority_score", 0),
+            "product_fit_family": df.get("product_fit_family", ""),
+            "product_fit_score": df.get("product_fit_score", 0),
+            "planning_opportunity_value_eur": df.get("planning_opportunity_value_eur", 0),
             "account_opportunity_score": df.get("account_opportunity_score", 0),
             "contact_readiness_score": df.get("contact_readiness_score", 0),
+            "field_next_best_action": df.get("field_next_best_action", ""),
+            "field_opening_questions": df.get("field_opening_questions", ""),
             "linkedin_url": df.get("linkedin_url", ""),
             "field_objective": df.apply(_field_objective, axis=1),
         }
@@ -114,8 +145,22 @@ def build_field_day_plan(
 
 
 def _field_objective(row: pd.Series) -> str:
+    explicit_objective = str(row.get("field_visit_objective", "") or "").strip()
+    if explicit_objective:
+        return explicit_objective
+
+    visit_priority = str(row.get("visit_priority", "")).strip()
     status = str(row.get("contact_status", "")).strip()
     territory_status = str(row.get("territory_status", "")).strip()
+
+    if visit_priority == "Visit Now":
+        return "Confirm the meeting and execute the evidence-based clinic visit objective."
+    if visit_priority == "High Priority Visit":
+        return "Secure or confirm a field visit while the account remains commercially attractive."
+    if visit_priority == "Contact / Prepare First":
+        return "Qualify the decision-maker and current need before allocating a field slot."
+    if visit_priority == "Research Before Visit":
+        return "Do not spend a field slot yet; close the main evidence gaps first."
 
     if status == "Ready for Field Visit":
         return "Prepare a focused visit objective and confirm appointment / availability."
