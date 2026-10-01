@@ -6,6 +6,7 @@ import pandas as pd
 import streamlit as st
 
 from field_planner import build_field_day_plan
+from visit_feedback import OUTCOME_SIGNALS, build_visit_feedback
 from outreach_generator import (
     COUNTRY_PROFILE,
     DEFAULT_PROFILE,
@@ -502,6 +503,19 @@ territory_status
 account_opportunity_score
 contact_readiness_score
 contact_status
+visit_priority
+visit_priority_score
+visit_priority_basis
+product_fit_family
+product_fit_score
+product_fit_status
+product_fit_basis
+planning_opportunity_value_eur
+planning_value_status
+planning_value_basis
+field_visit_objective
+field_opening_questions
+field_next_best_action
 observed_technology_axes
 technology_validation_questions
 account_website
@@ -945,18 +959,49 @@ if not territory_df.empty:
             key="field_day_province",
         )
 
+        city_source = province_source
+        if field_province != "All" and "territory_province" in province_source.columns:
+            city_source = province_source[
+                province_source["territory_province"].astype(str) == field_province
+            ]
+
+        field_cities = sorted(
+            value
+            for value in city_source.get(
+                "territory_city",
+                pd.Series(dtype=str),
+            ).dropna().astype(str).unique().tolist()
+            if value.strip()
+        )
+
+        field_city = st.selectbox(
+            "Field city / cluster",
+            options=["All"] + field_cities,
+            key="field_day_city",
+        )
+
+        default_visits = (
+            7
+            if field_province == "Milano" or field_city == "Milano"
+            else 5
+        )
         field_max_accounts = st.slider(
             "Maximum visits",
             min_value=2,
             max_value=8,
-            value=5,
+            value=default_visits,
             key="field_day_max_accounts",
+            help=(
+                "For dense Milano days, 6–7 qualified visits can be a realistic planning target. "
+                "Outside Milano, reduce the count as distance and travel time increase."
+            ),
         )
 
         field_plan = build_field_day_plan(
             territory_df,
             region="" if field_region == "All" else field_region,
             province="" if field_province == "All" else field_province,
+            city="" if field_city == "All" else field_city,
             max_accounts=field_max_accounts,
         )
 
@@ -979,6 +1024,127 @@ if not territory_df.empty:
                 file_name="territory_field_day_plan.csv",
                 mime="text/csv",
             )
+
+
+
+# ---------------------------------------------------------------------
+# FIELD VISIT DEBRIEF / LEARNING LOOP
+# ---------------------------------------------------------------------
+
+if not territory_df.empty:
+    st.divider()
+    st.subheader("📝 Field Visit Debrief & Learning Loop")
+    st.caption(
+        "Capture what was actually learned in the clinic, convert it into structured "
+        "qualification evidence, and export it for re-scoring in PRIORITIZE."
+    )
+
+    feedback_account_names = sorted(
+        territory_df["company"].dropna().astype(str).unique().tolist()
+    )
+    feedback_company = st.selectbox(
+        "Account visited",
+        feedback_account_names,
+        key="field_feedback_company",
+    )
+    feedback_account = (
+        territory_df[territory_df["company"].astype(str) == feedback_company]
+        .iloc[0]
+        .to_dict()
+    )
+
+    with st.form("field_visit_debrief_form"):
+        fb1, fb2 = st.columns(2)
+        with fb1:
+            field_outcome = st.selectbox(
+                "Visit outcome",
+                list(OUTCOME_SIGNALS.keys()),
+            )
+            product_interest = st.text_input(
+                "Product / solution interest",
+                value=str(feedback_account.get("product_fit_family", "") or ""),
+                help="Observed interest after the conversation; do not use this field as a clinical recommendation.",
+            )
+            estimated_value_eur = st.number_input(
+                "Qualified opportunity value (€)",
+                min_value=0.0,
+                value=0.0,
+                step=1000.0,
+                help="Enter only when a realistic commercial scope was discussed or otherwise verified.",
+            )
+            investment_timing = st.text_input(
+                "Investment timing",
+                placeholder="e.g. Q1 2027 / 3–6 months / exploratory",
+            )
+        with fb2:
+            current_technologies = st.text_area(
+                "Current technologies / providers",
+                height=90,
+            )
+            patient_demand = st.text_area(
+                "Patient demand / unmet needs",
+                height=90,
+            )
+            decision_process = st.text_area(
+                "Decision process / people involved",
+                height=90,
+            )
+
+        needs_summary = st.text_area(
+            "What did the clinic actually need?",
+            height=100,
+            help="Summarize the business problem in the clinic's own terms where possible.",
+        )
+        next_action = st.text_input(
+            "Agreed next action",
+            placeholder="e.g. schedule demo, send ROI case, follow up with medical director",
+        )
+        field_notes = st.text_area(
+            "Additional field notes",
+            height=90,
+        )
+
+        save_feedback = st.form_submit_button(
+            "Save Visit Debrief",
+            use_container_width=True,
+        )
+
+    if save_feedback:
+        feedback_record = build_visit_feedback(
+            feedback_account,
+            outcome=field_outcome,
+            needs_summary=needs_summary,
+            patient_demand=patient_demand,
+            current_technologies=current_technologies,
+            decision_process=decision_process,
+            investment_timing=investment_timing,
+            product_interest=product_interest,
+            estimated_value_eur=estimated_value_eur,
+            next_action=next_action,
+            notes=field_notes,
+        )
+        feedback_records = st.session_state.get("field_visit_feedback_records", [])
+        feedback_records.append(feedback_record)
+        st.session_state.field_visit_feedback_records = feedback_records
+        st.success(
+            "Visit evidence saved. The record can now be exported and re-scored in PRIORITIZE."
+        )
+
+    feedback_records = st.session_state.get("field_visit_feedback_records", [])
+    if feedback_records:
+        feedback_df = pd.DataFrame(feedback_records)
+        st.dataframe(
+            feedback_df,
+            use_container_width=True,
+            hide_index=True,
+        )
+        st.download_button(
+            "⬇ Download Field Visit Feedback",
+            feedback_df.to_csv(index=False).encode("utf-8"),
+            file_name="field_visit_feedback.csv",
+            mime="text/csv",
+            use_container_width=True,
+        )
 
 
 # ---------------------------------------------------------------------
