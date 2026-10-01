@@ -89,7 +89,7 @@ def build_visit_feedback(
         "engagement_signal": engagement_signal,
         "engagement_status": engagement_status,
         "estimated_deal_value_eur": value,
-        "estimated_deal_value_usd": value,
+        "deal_value_currency": "EUR",
         "deal_value_status": "verified" if value > 0 else "unknown",
         "field_next_action": _text(next_action),
         "source_stage": "FIELD_VISIT_FEEDBACK",
