@@ -502,6 +502,19 @@ territory_status
 account_opportunity_score
 contact_readiness_score
 contact_status
+visit_priority
+visit_priority_score
+visit_priority_basis
+product_fit_family
+product_fit_score
+product_fit_status
+product_fit_basis
+planning_opportunity_value_eur
+planning_value_status
+planning_value_basis
+field_visit_objective
+field_opening_questions
+field_next_best_action
 observed_technology_axes
 technology_validation_questions
 account_website
@@ -945,18 +958,49 @@ if not territory_df.empty:
             key="field_day_province",
         )
 
+        city_source = province_source
+        if field_province != "All" and "territory_province" in province_source.columns:
+            city_source = province_source[
+                province_source["territory_province"].astype(str) == field_province
+            ]
+
+        field_cities = sorted(
+            value
+            for value in city_source.get(
+                "territory_city",
+                pd.Series(dtype=str),
+            ).dropna().astype(str).unique().tolist()
+            if value.strip()
+        )
+
+        field_city = st.selectbox(
+            "Field city / cluster",
+            options=["All"] + field_cities,
+            key="field_day_city",
+        )
+
+        default_visits = (
+            7
+            if field_province == "Milano" or field_city == "Milano"
+            else 5
+        )
         field_max_accounts = st.slider(
             "Maximum visits",
             min_value=2,
             max_value=8,
-            value=5,
+            value=default_visits,
             key="field_day_max_accounts",
+            help=(
+                "For dense Milano days, 6–7 qualified visits can be a realistic planning target. "
+                "Outside Milano, reduce the count as distance and travel time increase."
+            ),
         )
 
         field_plan = build_field_day_plan(
             territory_df,
             region="" if field_region == "All" else field_region,
             province="" if field_province == "All" else field_province,
+            city="" if field_city == "All" else field_city,
             max_accounts=field_max_accounts,
         )
 
