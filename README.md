@@ -1,367 +1,256 @@
 # Adaptive Outreach Intelligence Platform
 
-### Commercial Prioritization | Adaptive Cadence | Multilingual Outreach | AI-Assisted Business Development
+### Commercial Prioritization | Adaptive Cadence | Multilingual Outreach | Qualification-First Execution
 
 [![Live App](https://img.shields.io/badge/Live%20App-Streamlit-FF4B4B?logo=streamlit&logoColor=white)](https://outreach-sequence-generator-7dcmglcxfnmszlodg8lqre.streamlit.app/)
 ![Python](https://img.shields.io/badge/Python-3.11%2B-blue?logo=python&logoColor=white)
 ![Streamlit](https://img.shields.io/badge/Streamlit-App-FF4B4B?logo=streamlit&logoColor=white)
+![Commercial Intelligence](https://img.shields.io/badge/Commercial%20Intelligence-ENGAGE-8250df)
 [![Python CI](https://github.com/Eambrosin/outreach-sequence-generator/actions/workflows/ci.yml/badge.svg)](https://github.com/Eambrosin/outreach-sequence-generator/actions/workflows/ci.yml)
 
-A practical Commercial Intelligence application designed to help Business Development, Sales, Partnerships and GTM teams decide **who to contact, when to engage, which channel to use and what commercial action should happen next**.
+A Commercial Intelligence application that converts qualification context into adaptive, multilingual outreach sequences while preserving evidence, qualification gaps and channel availability.
 
-The core strategy is deterministic and explainable. AI is optional and is used only after commercial priority, cadence and channel strategy have already been determined.
+> **Outreach should reflect what is known, what still needs to be qualified and which public channel is actually available.**
 
-> **Commercial logic first. AI assists communication; it does not determine opportunity priority.**
-
----
-
-## Live Application
-
-[Launch the Adaptive Outreach Intelligence Platform](https://outreach-sequence-generator-7dcmglcxfnmszlodg8lqre.streamlit.app/)
-
----
-
-## Product Preview
-
-### Executive Outreach Intelligence
-
-![Executive Summary](screenshots/v2-executive-summary.png)
-
-Portfolio-level view of pipeline value, commercial priority, country coverage and revenue exposure.
-
-### Adaptive Priority Ranking
-
-![Adaptive Priority Ranking](screenshots/v2-priority-ranking.png)
-
-Ranks accounts using qualification context, engagement signals, deal value and outreach logic.
-
-### Account & Outreach Intelligence Workspace
-
-![Account Intelligence](screenshots/v2-account-intelligence.png)
-
-Combines account context, deal value, proposal age, commercial score, priority tier, engagement signal and recommended next action.
-
-### Adaptive Outreach Cadence
-
-![Adaptive Cadence](screenshots/v2-adaptive-cadence.png)
-
-Cadence changes according to commercial priority and engagement rather than forcing every account into the same sequence.
-
-### Multilingual Outreach Generation
-
-![Generated Sequence](screenshots/v2-generated-sequence.png)
-
-Produces a four-touch sequence using the selected language, channel, cadence and commercial objective.
-
----
-
-## Portfolio Demo Flow
-
-A concise interview/demo path is:
-
-1. Upload an **ENGAGE Handoff v2** exported from Opportunity Discovery Intelligence.
-2. Open the **Account & Outreach Intelligence Workspace**.
-3. Show the carried-forward Qualification Readiness, Sales Motion, Buyer Access, evidence gaps and qualification questions.
-4. Explain why the channel is selected from **observed availability**, not only from a country default.
-5. Show the adaptive cadence and the distinction between account attractiveness and buying intent.
-6. Generate the four-touch sequence.
-7. Show that internal scores and readiness labels are excluded from prospect-facing copy.
-8. Export the sequence as TXT or CSV.
-
-For the validated Medical Aesthetics example, the useful story is:
-
-> **A high-potential account does not automatically become an aggressive sales sequence. ENGAGE preserves uncertainty and creates a qualification-first motion using the public channel that actually exists.**
-
-Recommended screenshots:
-
-- Account & Outreach Intelligence Workspace
-- Upstream Qualification Intelligence
-- Adaptive Cadence
-- Commercial Decision Support
-- generated four-touch sequence
+**[Launch the live application](https://outreach-sequence-generator-7dcmglcxfnmszlodg8lqre.streamlit.app/)**
 
 ---
 
 ## Business Problem
 
-Commercial teams frequently use the same outreach sequence for very different opportunities.
+Commercial outreach often breaks the connection between qualification and execution.
 
-That can create several problems:
+Typical problems include:
 
-- high-value opportunities may not receive enough attention
-- low-priority accounts may consume excessive time
-- follow-up timing may ignore engagement signals
-- qualification context may be lost after handoff
-- international outreach may not reflect language or channel needs
-- internal scoring may leak into prospect-facing communication
+- every account receives the same cadence
+- internal scores leak into prospect-facing messaging
+- missing information is converted into confident claims
+- channel selection ignores what is actually available
+- follow-up intensity is disconnected from account priority
+- multilingual messaging loses commercial context
+- field activity and digital outreach operate separately
 
-The platform connects **qualification context** to **commercial execution**.
+ENGAGE turns upstream qualification intelligence into a structured commercial sequence.
+
+---
+
+## Commercial Workflow
+
+```text
+QUALIFICATION CONTEXT
+        ↓
+ACCOUNT PRIORITY
+        +
+READINESS / GAPS
+        +
+AVAILABLE CHANNEL
+        ↓
+OUTREACH STRATEGY
+        ↓
+ADAPTIVE CADENCE
+        ↓
+MULTILINGUAL TOUCHES
+        ↓
+NEXT ACTION
+        ↓
+VISIT / RESPONSE FEEDBACK
+```
+
+The system can work independently or consume upstream handoffs from IDENTIFY and PRIORITIZE.
+
+---
+
+## Product Preview
+
+### 1. Executive Outreach Intelligence
+
+![Executive Summary](screenshots/v2-executive-summary.png)
+
+A concise view of outreach priority, readiness, channel availability and commercial next actions.
+
+### 2. Adaptive Priority Ranking
+
+![Priority Ranking](screenshots/v2-priority-ranking.png)
+
+Accounts are ordered using upstream commercial context rather than treating every prospect equally.
+
+### 3. Account & Outreach Intelligence
+
+![Account Intelligence](screenshots/v2-account-intelligence.png)
+
+Brings account context, qualification gaps, channel strategy and messaging logic into one workspace.
+
+### 4. Adaptive Cadence
+
+![Adaptive Cadence](screenshots/v2-adaptive-cadence.png)
+
+Cadence changes according to commercial priority, qualification state and available engagement paths.
+
+### 5. Generated Outreach Sequence
+
+![Generated Sequence](screenshots/v2-generated-sequence.png)
+
+Creates a multilingual sequence that preserves qualification-first language and avoids exposing internal scoring.
+
+---
+
+## Core Capabilities
+
+- qualification-aware outreach strategy
+- priority-based cadence
+- available-channel selection
+- multilingual outreach
+- account-specific message generation
+- qualification-first messaging
+- deterministic fallback generation
+- optional AI-assisted copy
+- territory and field-sales context
+- field-day planning
+- visit-feedback loop
+- portable upstream handoffs
+- CSV import / export
+- automated tests and GitHub Actions CI
+- full-history secret scanning
 
 ---
 
 ## Two Operating Modes
 
-### 1. Commercial Intelligence Mode
+### Commercial Intelligence Mode
 
-Designed to consume exports from the [Lead Qualification & Revenue Prioritization Platform](https://github.com/Eambrosin/lead-qualification-scorer).
+Consumes structured context such as:
 
-Supported context includes:
+- account priority
+- Qualification Readiness
+- Buyer Access
+- Sales Motion
+- qualification questions
+- evidence gaps
+- account / territory context
 
-- company and market information
-- estimated deal value
+This mode is designed to preserve upstream commercial reasoning.
+
+### Standard Outreach Mode
+
+Creates outreach directly from account inputs when an upstream handoff is not available.
+
+This keeps the application usable as a standalone system.
+
+---
+
+## Qualification-First Design
+
+ENGAGE distinguishes between:
+
+**What is known**  
+Observed or explicitly supplied account information.
+
+**What should be qualified**  
+Commercially relevant information that still requires a conversation.
+
+**What should not be claimed**  
+Internal scores, unsupported buying intent, unverified decision authority or unobserved needs.
+
+This prevents internal prioritization logic from becoming external prospect-facing language.
+
+---
+
+## Channel & Cadence Logic
+
+The application can adapt around channels such as:
+
+- LinkedIn
+- email
+- phone
+- WhatsApp
+- field visit
+
+Channel selection should reflect observed availability and the commercial context of the account.
+
+Cadence intensity can also vary by priority instead of applying a universal sequence to every account.
+
+---
+
+## Multilingual Execution
+
+The system supports commercial outreach across multiple languages and can preserve:
+
+- qualification objective
+- tone
+- account context
+- CTA
+- channel constraints
+- sequence continuity
+
+Language generation is treated as an execution layer rather than a replacement for commercial strategy.
+
+---
+
+## IDENTIFY / PRIORITIZE → ENGAGE
+
+ENGAGE can receive context from:
+
+**IDENTIFY — Opportunity Discovery Intelligence**
+
+- account identity
+- public-contact evidence
+- Account Opportunity
+- Qualification Readiness
+- Buyer Access
+- Sales Motion
+- qualification questions
+- evidence gaps
+
+**PRIORITIZE — Lead Qualification & Revenue Prioritization**
+
+- ICP fit
 - commercial score
 - priority tier
-- engagement signal
+- revenue context
 - recommended action
-- score rationale
-- shared market profile ID and source-stage metadata
-- public LinkedIn URL and contact headline when supplied upstream
-- evidence-based outreach angle and professional-setting context
+- qualification gaps
 
-### 2. Standard Outreach Mode
-
-Supports traditional prospecting or post-proposal pipelines even when no upstream score or tier is available.
-
-The deterministic engine can still use:
-
-- proposal age
-- engagement signal
-- deal value
-- country
-- communication profile
-
----
-
-### Medical Aesthetics Context
-
-When the upstream profile is **Medical Aesthetics**, the outreach layer can preserve clinic/practitioner context and add domain-specific validation goals such as treatment-portfolio fit, training/service expectations and professional/device eligibility where required.
-
-The engine does not make clinical or regulatory conclusions. It carries upstream validation signals into the commercial workflow so the user knows what must be confirmed before device-specific outreach.
-
----
-
-## Evidence-Aware Handoff v2
-
-ENGAGE can consume the v2 handoff exported by Opportunity Discovery Intelligence after public-contact validation.
-
-The handoff preserves:
-
-- Account Opportunity and Qualification Readiness
-- Sales Motion and Buyer Access status
-- commercial hypothesis and evidence-based commercial angle
-- next best action
-- qualification questions and open evidence gaps
-- public account website and contact-form evidence
-- validated public LinkedIn profile candidate
-- contact relevance, role and location-match evidence
-- observed technology axes without inferring purchase intent
-
-For prospecting, this lets ENGAGE distinguish an account that is merely interesting from one that is sufficiently researched for a **qualification-first conversation**.
-
-When a country-level channel default is not actually available, ENGAGE now prefers an observed channel. For example, an Italian account with no public phone or email but a validated LinkedIn profile will use LinkedIn rather than assuming WhatsApp availability.
-
----
-
-## Enriched Account Context
-
-ENGAGE preserves Account Enrichment evidence from the integrated Commercial Intelligence pipeline.
-
-When available, the account workspace and Field Day Planner can use:
-
-- direct account website
-- public address
-- public phone
-- public email
-- enrichment status
-- Account Data Completeness
-- public decision-maker candidate and LinkedIn evidence
-
-The Field Day Planner exports enriched visit details alongside territory, priority and contact-readiness context.
-
-Public account and professional-profile data should still be verified before outreach or field execution.
-
----
-
-## Territory Execution
-
-When upstream data contains Territory Intelligence metadata, ENGAGE becomes a lightweight field-sales execution layer.
-
-It can preserve and display:
-
-- territory profile and vendor profile
-- region, province and city
-- Account Opportunity Score
-- territory research status
-- Contact Readiness Score
-- contact execution status
-- public LinkedIn evidence
-- observed technology axes
-- upstream outreach angle
-
-Field-motion guidance includes:
-
-```text
-Field visit candidate
-Personalized outreach before visit
-Identify and verify decision maker
-Validate professional/device eligibility first
-Continue territory research and qualification
-```
-
-For Bolzano / Bozen, the system keeps Italian as the country-level default but explicitly prompts the user to verify whether the contact prefers German or Italian rather than assuming language preference.
-
-### Field Day Planner
-
-Territory pipelines can be converted into a province/city-clustered visit shortlist.
-
-The planner prioritizes:
-
-- Ready for Field Visit / Ready for Outreach status
-- commercial priority
-- Contact Readiness
-- Account Opportunity
-- qualification score
-
-It deliberately does **not** claim to optimize driving routes or travel time. Route optimization is reserved for a future map/routing-provider integration.
-
----
-
-## Decision Logic
-
-The engine determines:
-
-1. commercial priority
-2. outreach intensity
-3. follow-up cadence
-4. primary communication channel
-5. outreach language
-6. commercial objective
-7. recommended next-step structure
-
-Example cadence patterns:
-
-```text
-HIGH PRIORITY
-Day +0 → Day +2 → Day +5 → Day +10
-
-BALANCED
-Day +0 → Day +3 → Day +7 → Day +14
-
-LOW PRIORITY
-Day +0 → Day +7 → Day +21 → Day +35
-```
-
-Aged post-proposal opportunities receive a different objective focused on clarifying status, surfacing blockers and obtaining a concrete next step.
-
----
-
-## Channel & Language Profiles
-
-The repository includes configurable country-level defaults for language, channel and tone.
-
-Examples include Portuguese, Spanish, Italian, French, German and English communication profiles.
-
-These profiles are **workflow defaults, not claims about individual behavior or entire markets**. They are intended to be reviewed and adapted by the commercial user before outreach.
-
-For markets not explicitly configured, the application uses a neutral English / Email fallback.
-
----
-
-## AI Layer
-
-If an `ANTHROPIC_API_KEY` is available, the application can generate prospect-facing messages using the deterministic strategy as context.
-
-The prompt explicitly instructs the model not to expose:
-
-- lead score
-- priority tier
-- internal priority
-- score rationale
-- scoring methodology
-
-It also instructs the model not to invent company projects, budgets, decision makers, pain points, growth initiatives or market research.
-
-If AI generation is unavailable or fails, the platform returns a deterministic local sequence instead.
-
-When AI generation is enabled, the selected account context is sent to Anthropic for generation. Users should avoid submitting sensitive personal or confidential information.
-
----
-
-## Commercial Intelligence Workflow
-
-```text
-Lead Qualification
-        ↓
-Commercial Score
-        ↓
-Priority Tier
-        ↓
-Recommended Action
-        ↓
-Adaptive Outreach Intelligence
-        ↓
-Priority + Cadence + Channel
-        ↓
-Prospect-Facing Message
-        ↓
-Commercial Next Step
-```
-
-The objective is to preserve useful commercial context while keeping internal scoring separate from external communication.
+The objective is to avoid restarting research at the outreach stage.
 
 ---
 
 ## Architecture
 
 ```text
-Pipeline / Lead Export
-        ↓
-Data Normalization
-        ↓
-Commercial Priority Engine
-        ↓
-Adaptive Outreach Strategy
-        ↓
-Channel + Language Profile
-        ↓
-┌─────────────────────────────┐
-│ Optional AI Message Layer   │
-│ or Deterministic Fallback   │
-└──────────────┬──────────────┘
-               ↓
-Four-Touch Outreach Sequence
-               ↓
-Streamlit Workspace / Export
+app.py
+  ↓
+upstream handoff / direct account input
+  ↓
+outreach_generator.py
+  ↓
+adaptive cadence + message generation
+  ↓
+field_planner.py
+  ↓
+visit_feedback.py
 ```
+
+Deterministic commercial logic remains available even when the optional AI layer is disabled.
 
 ---
 
-## Project Structure
+## Testing
 
-```text
-outreach-sequence-generator/
-│
-├── app.py
-├── outreach_generator.py
-├── field_planner.py
-├── requirements.txt
-├── CHANGELOG.md
-├── README.md
-│
-├── data/
-│   └── pipeline.csv
-│
-├── tests/
-│   └── test_outreach_generator.py
-│
-├── .github/
-│   └── workflows/
-│       └── ci.yml
-│
-└── screenshots/
+The repository includes automated tests for:
+
+- outreach generation
+- field planning
+- visit feedback
+- deterministic fallbacks
+- handoff behavior
+
+Run locally:
+
+```bash
+python -m pytest -q
 ```
 
-The commercial strategy engine is separated from the Streamlit presentation layer so the decision logic can be tested independently.
+GitHub Actions runs CI on pushes and pull requests to `main`.
 
 ---
 
@@ -374,88 +263,54 @@ pip install -r requirements.txt
 streamlit run app.py
 ```
 
-Optional AI generation:
-
-```bash
-export ANTHROPIC_API_KEY="your-key"
-```
-
-The application works without an API key.
-
----
-
-## Testing & Continuous Integration
-
-The repository includes automated tests for:
-
-- upstream Lead Qualification compatibility
-- commercial-intelligence mode detection
-- priority classification
-- adaptive cadence
-- legacy pipeline support
-- prospecting vs post-proposal logic
-- unknown-market fallback behavior
-- multi-channel sequencing
-- protection against exposing internal score context in deterministic messages
-
-Run locally:
-
-```bash
-python -m pytest -q
-```
-
-GitHub Actions validates Python syntax and runs the test suite on pushes and pull requests to `main`.
+Optional AI features require the relevant API key in environment variables or Streamlit secrets.
 
 ---
 
 ## Current Version
 
-### v2.1.0
+**v2.1.0 — Adaptive Outreach Intelligence**
 
-Version 2.1 adds the evidence-aware IDENTIFY → ENGAGE handoff, channel-availability logic, Qualification Readiness / Sales Motion context and qualification-first Medical Aesthetics outreach.
+Current functionality includes qualification-aware handoffs, account intelligence, priority-based cadence, multilingual execution, field-sales context and stronger evidence-aware outreach behavior.
 
-### v2.0.0
-
-Version 2 connects outreach execution to upstream qualification context while preserving a deterministic local fallback.
-
-See [CHANGELOG.md](CHANGELOG.md) for release details.
+Release notes are available in [docs/RELEASE_NOTES_v2.1.0.md](docs/RELEASE_NOTES_v2.1.0.md).
 
 ---
 
-## Demo Data
+## Documentation
 
-The bundled demo pipeline is **synthetic demonstration data**, not a client pipeline or a record of real transactions.
+- [Detailed Technical Reference](docs/TECHNICAL_REFERENCE.md)
+- [Portfolio Demo Flow](docs/PORTFOLIO_DEMO.md)
+- [Tests](tests/)
+- [Commercial Intelligence Portfolio](https://github.com/Eambrosin)
 
 ---
 
 ## Limitations
 
-This is a portfolio and decision-support application, not a production CRM or automated sales-engagement platform.
+This is a portfolio and commercial decision-support application.
 
-Current limitations include:
+It does not:
 
-- no CRM write-back
-- no deliverability management
-- no contact enrichment
-- no automated sending
-- country profiles are configurable heuristics rather than empirical market rules
-- AI outputs require human review before prospect-facing use
-
-These boundaries are intentional: the project demonstrates structured Commercial Intelligence without presenting itself as a production replacement for established sales platforms.
+- autonomously send outreach
+- verify private contact information
+- infer buying intent
+- guarantee that a public channel is current
+- replace human review before external communication
 
 ---
 
 ## Portfolio Context
 
-This project is the **ENGAGE** execution layer used by both commercial tracks:
+This project is the **ENGAGE** layer of the Commercial Intelligence portfolio:
 
 ```text
 IDENTIFY → PRIORITIZE → ENGAGE
 IDENTIFY / Partner Universe → PARTNER → ENGAGE
-
-Both tracks can later feed EXPAND / Territory Intelligence.
 ```
 
+**IDENTIFY:** [Opportunity Discovery Intelligence](https://github.com/Eambrosin/opportunity-discovery-intelligence)  
+**PRIORITIZE:** [Lead Qualification & Revenue Prioritization](https://github.com/Eambrosin/lead-qualification-scorer)  
 **Portfolio:** [github.com/Eambrosin](https://github.com/Eambrosin)
 
 ---
@@ -463,6 +318,4 @@ Both tracks can later feed EXPAND / Territory Intelligence.
 ## Author
 
 **Eduardo Ambrosin**  
-International Business Development · Strategic Partnerships · GTM · Commercial Intelligence
-
-[LinkedIn](https://www.linkedin.com/in/eduardoambrosin/) · [Professional Website](https://www.ambrosinlegaltrade.com/)
+International Business Development | Strategic Partnerships | GTM | Commercial Intelligence
