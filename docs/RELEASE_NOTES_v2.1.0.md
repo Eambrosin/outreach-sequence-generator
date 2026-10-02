@@ -44,7 +44,7 @@ IDENTIFY / Partner Universe → PARTNER → ENGAGE
 
 ## Live Application
 
-https://outreach-sequence-generator-7dcmglcxfnmszlodg8lqre.streamlit.app/
+https://outreach-sequence-generator-eambrosin.streamlit.app/
 
 ## Repository
 
