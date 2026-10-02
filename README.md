@@ -2,7 +2,7 @@
 
 ### Commercial Prioritization | Adaptive Cadence | Multilingual Outreach | Qualification-First Execution
 
-[![Live App](https://img.shields.io/badge/Live%20App-Streamlit-FF4B4B?logo=streamlit&logoColor=white)](https://outreach-sequence-generator-7dcmglcxfnmszlodg8lqre.streamlit.app/)
+[![Live App](https://img.shields.io/badge/Live%20App-Streamlit-FF4B4B?logo=streamlit&logoColor=white)](https://outreach-sequence-generator-eambrosin.streamlit.app/)
 ![Python](https://img.shields.io/badge/Python-3.11%2B-blue?logo=python&logoColor=white)
 ![Streamlit](https://img.shields.io/badge/Streamlit-App-FF4B4B?logo=streamlit&logoColor=white)
 ![Commercial Intelligence](https://img.shields.io/badge/Commercial%20Intelligence-ENGAGE-8250df)
@@ -13,7 +13,7 @@ A Commercial Intelligence application that converts qualification context into a
 
 > **Outreach should reflect what is known, what still needs to be qualified and which public channel is actually available.**
 
-**[Launch the live application](https://outreach-sequence-generator-7dcmglcxfnmszlodg8lqre.streamlit.app/)**
+**[Launch the live application](https://outreach-sequence-generator-eambrosin.streamlit.app/)**
 
 ---
 
