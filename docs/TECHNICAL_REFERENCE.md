@@ -6,7 +6,7 @@
 
 ### Commercial Prioritization | Adaptive Cadence | Multilingual Outreach | AI-Assisted Business Development
 
-[![Live App](https://img.shields.io/badge/Live%20App-Streamlit-FF4B4B?logo=streamlit&logoColor=white)](https://outreach-sequence-generator-7dcmglcxfnmszlodg8lqre.streamlit.app/)
+[![Live App](https://img.shields.io/badge/Live%20App-Streamlit-FF4B4B?logo=streamlit&logoColor=white)](https://outreach-sequence-generator-eambrosin.streamlit.app/)
 ![Python](https://img.shields.io/badge/Python-3.11%2B-blue?logo=python&logoColor=white)
 ![Streamlit](https://img.shields.io/badge/Streamlit-App-FF4B4B?logo=streamlit&logoColor=white)
 [![Python CI](https://github.com/Eambrosin/outreach-sequence-generator/actions/workflows/ci.yml/badge.svg)](https://github.com/Eambrosin/outreach-sequence-generator/actions/workflows/ci.yml)
@@ -21,7 +21,7 @@ The core strategy is deterministic and explainable. AI is optional and is used o
 
 ## Live Application
 
-[Launch the Adaptive Outreach Intelligence Platform](https://outreach-sequence-generator-7dcmglcxfnmszlodg8lqre.streamlit.app/)
+[Launch the Adaptive Outreach Intelligence Platform](https://outreach-sequence-generator-eambrosin.streamlit.app/)
 
 ---
 
