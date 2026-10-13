@@ -7,6 +7,7 @@ import streamlit as st
 
 from field_planner import build_field_day_plan
 from visit_feedback import OUTCOME_SIGNALS, build_visit_feedback
+from commercial_mandate import has_mandate_context, mandate_summary
 from outreach_generator import (
     COUNTRY_PROFILE,
     DEFAULT_PROFILE,
@@ -729,6 +730,13 @@ for lead in normalized_leads:
 df = pd.DataFrame(
     dashboard_rows
 )
+
+if not df.empty and has_mandate_context(df.iloc[0].to_dict()):
+    st.info(
+        "**Commercial Mandate:** "
+        + mandate_summary(df.iloc[0].to_dict())
+        + "  \\nOutreach preserves the mandate context and qualification gaps from upstream."
+    )
 
 
 # ---------------------------------------------------------------------
