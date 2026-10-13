@@ -2,6 +2,8 @@
 
 ### Commercial Prioritization | Adaptive Cadence | Multilingual Outreach | Qualification-First Execution
 
+**Operational focus:** Business Development Execution & Follow-Up
+
 [![Live App](https://img.shields.io/badge/Live%20App-Streamlit-FF4B4B?logo=streamlit&logoColor=white)](https://outreach-sequence-generator-eambrosin.streamlit.app/)
 ![Python](https://img.shields.io/badge/Python-3.11%2B-blue?logo=python&logoColor=white)
 ![Streamlit](https://img.shields.io/badge/Streamlit-App-FF4B4B?logo=streamlit&logoColor=white)
@@ -9,7 +11,7 @@
 [![Python CI](https://github.com/Eambrosin/outreach-sequence-generator/actions/workflows/ci.yml/badge.svg)](https://github.com/Eambrosin/outreach-sequence-generator/actions/workflows/ci.yml)
 [![License](https://img.shields.io/badge/License-All%20Rights%20Reserved-lightgrey)](LICENSE)
 
-A Commercial Intelligence application that converts qualification context into adaptive, multilingual outreach sequences while preserving evidence, qualification gaps and channel availability.
+A Commercial Intelligence application that converts mandate and qualification context into adaptive multilingual outreach, qualified dialogue, follow-up and structured opportunity execution while preserving evidence, qualification gaps and channel availability.
 
 > **Outreach should reflect what is known, what still needs to be qualified and which public channel is actually available.**
 
@@ -38,6 +40,8 @@ ENGAGE turns upstream qualification intelligence into a structured commercial se
 ## Commercial Workflow
 
 ```text
+COMMERCIAL MANDATE
+        +
 QUALIFICATION CONTEXT
         ↓
 ACCOUNT PRIORITY
@@ -136,6 +140,47 @@ This mode is designed to preserve upstream commercial reasoning.
 Creates outreach directly from account inputs when an upstream handoff is not available.
 
 This keeps the application usable as a standalone system.
+
+---
+
+## Business Development Execution Log
+
+ENGAGE now continues beyond first-touch outreach.
+
+For each selected counterparty, the workflow can record:
+
+- opportunity stage
+- response status
+- meeting / conversation outcome
+- observed commercial interest
+- products / solutions discussed
+- decision process and stakeholders
+- budget / investment status
+- commercial timeline
+- technical questions
+- objections / blockers
+- requested documents
+- next commercial action
+- next-action date
+- execution notes
+
+The resulting **BD Execution Update** is exportable and preserves the Commercial Mandate and Trade Feasibility context.
+
+```text
+CONTACT
+  ↓
+RESPONSE
+  ↓
+QUALIFICATION
+  ↓
+MEETING
+  ↓
+FOLLOW-UP
+  ↓
+ACTIVE OPPORTUNITY
+  ↓
+NEXT ACTION
+```
 
 ---
 
@@ -303,7 +348,7 @@ It does not:
 
 ## Portfolio Context
 
-This project is the **ENGAGE** layer of the Commercial Intelligence portfolio:
+This project is the **ENGAGE / EXECUTE** layer of the Commercial Intelligence portfolio:
 
 ```text
 IDENTIFY → PRIORITIZE → ENGAGE
