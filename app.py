@@ -8,6 +8,11 @@ import streamlit as st
 from field_planner import build_field_day_plan
 from visit_feedback import OUTCOME_SIGNALS, build_visit_feedback
 from commercial_mandate import has_mandate_context, mandate_summary
+from bd_execution import (
+    OPPORTUNITY_STAGES,
+    RESPONSE_STATUSES,
+    build_execution_update,
+)
 from outreach_generator import (
     COUNTRY_PROFILE,
     DEFAULT_PROFILE,
@@ -2405,6 +2410,134 @@ if (
 
 
 # ---------------------------------------------------------------------
+# BUSINESS DEVELOPMENT EXECUTION
+# ---------------------------------------------------------------------
+
+st.divider()
+st.subheader("📈 Business Development Execution Log")
+st.caption(
+    "Continue the commercial process after outreach: record responses, meetings, "
+    "qualification evidence, objections and the next action without losing the mandate context."
+)
+
+execution_key = f"bd_execution::{safe_filename(lead['company'])}"
+
+with st.form(f"bd_execution_form::{safe_filename(lead['company'])}"):
+    exec_1, exec_2 = st.columns(2)
+
+    with exec_1:
+        opportunity_stage = st.selectbox(
+            "Opportunity stage",
+            OPPORTUNITY_STAGES,
+            index=0,
+        )
+        response_status = st.selectbox(
+            "Response status",
+            RESPONSE_STATUSES,
+            index=0,
+        )
+        meeting_outcome = st.text_area(
+            "Meeting / conversation outcome",
+            height=80,
+            placeholder="What was learned? What changed after the conversation?",
+        )
+        commercial_interest = st.text_area(
+            "Commercial interest / use case",
+            height=80,
+            placeholder="Observed interest only; do not infer demand that was not expressed.",
+        )
+        products_discussed = st.text_input(
+            "Products / solutions discussed",
+        )
+        budget_status = st.text_input(
+            "Budget / investment status",
+            placeholder="Unknown / exploratory / budgeted / to validate",
+        )
+        timeline = st.text_input(
+            "Commercial timeline",
+            placeholder="e.g. Q1 2027 / 3–6 months / no timing yet",
+        )
+
+    with exec_2:
+        decision_process = st.text_area(
+            "Decision process / stakeholders",
+            height=80,
+        )
+        technical_questions = st.text_area(
+            "Technical / feasibility questions",
+            height=80,
+        )
+        objections = st.text_area(
+            "Objections / blockers",
+            height=80,
+        )
+        documents_requested = st.text_area(
+            "Documents / information requested",
+            height=80,
+        )
+        next_action = st.text_input(
+            "Next commercial action",
+            placeholder="Send technical sheet, schedule demo, qualify distributor...",
+        )
+        next_action_date = st.date_input(
+            "Next action date",
+            value=None,
+        )
+        execution_notes = st.text_area(
+            "Execution notes",
+            height=80,
+        )
+
+    save_execution = st.form_submit_button(
+        "Save Execution Update",
+        type="primary",
+        use_container_width=True,
+    )
+
+if save_execution:
+    execution_update = build_execution_update(
+        lead,
+        opportunity_stage=opportunity_stage,
+        response_status=response_status,
+        meeting_outcome=meeting_outcome,
+        commercial_interest=commercial_interest,
+        products_discussed=products_discussed,
+        decision_process=decision_process,
+        budget_status=budget_status,
+        timeline=timeline,
+        technical_questions=technical_questions,
+        objections=objections,
+        documents_requested=documents_requested,
+        next_action=next_action,
+        next_action_date=str(next_action_date or ""),
+        execution_notes=execution_notes,
+    )
+    st.session_state[execution_key] = execution_update
+
+execution_update = st.session_state.get(execution_key)
+
+if execution_update:
+    execution_df = pd.DataFrame([execution_update])
+    e1, e2, e3 = st.columns(3)
+    e1.metric("Stage", execution_update.get("opportunity_stage", ""))
+    e2.metric("Response", execution_update.get("response_status", ""))
+    e3.metric(
+        "Next Action",
+        execution_update.get("next_action", "") or "To define",
+    )
+
+    st.download_button(
+        "⬇ Download BD Execution Update",
+        execution_df.to_csv(index=False).encode("utf-8"),
+        file_name=(
+            f"{safe_filename(lead['company'])}"
+            "_bd_execution_update.csv"
+        ),
+        mime="text/csv",
+        use_container_width=True,
+    )
+
+# ---------------------------------------------------------------------
 # FOOTER
 # ---------------------------------------------------------------------
 
@@ -2412,6 +2545,6 @@ st.divider()
 
 
 st.caption(
-    "Commercial Intelligence workflow: "
-    "IDENTIFY → PRIORITIZE → ENGAGE → LEARN → ADVANCE"
+    "Ambrosin BD workflow: COMMERCIAL MANDATE → IDENTIFY → PRIORITIZE / PARTNER "
+    "→ ENGAGE → QUALIFIED DIALOGUE → OPPORTUNITY → NEXT ACTION"
 )
