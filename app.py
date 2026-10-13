@@ -13,6 +13,14 @@ from bd_execution import (
     RESPONSE_STATUSES,
     build_execution_update,
 )
+from commercial_deal import (
+    DEAL_STAGES,
+    build_commercial_deal_sheet,
+)
+from mandate_reporting import (
+    build_mandate_report,
+    report_to_markdown,
+)
 from outreach_generator import (
     COUNTRY_PROFILE,
     DEFAULT_PROFILE,
@@ -2536,6 +2544,319 @@ if execution_update:
         mime="text/csv",
         use_container_width=True,
     )
+
+# ---------------------------------------------------------------------
+# COMMERCIAL DEAL SHEET
+# ---------------------------------------------------------------------
+
+st.divider()
+st.subheader("💼 Commercial Deal Sheet")
+st.caption(
+    "Structure an active opportunity without turning commercial assumptions into facts. "
+    "Use only terms that were discussed, quoted or otherwise verified."
+)
+
+deal_key = f"commercial_deal::{safe_filename(lead['company'])}"
+
+with st.form(f"commercial_deal_form::{safe_filename(lead['company'])}"):
+    deal_1, deal_2 = st.columns(2)
+
+    with deal_1:
+        deal_stage = st.selectbox(
+            "Deal stage",
+            DEAL_STAGES,
+            index=0,
+        )
+        deal_product = st.text_input(
+            "Product / solution",
+            value=optional(lead.get("mandate_product"), ""),
+        )
+        product_specification = st.text_area(
+            "Product / technical scope",
+            height=80,
+        )
+        deal_quantity = st.text_input(
+            "Quantity / scope",
+        )
+        value_col, currency_col = st.columns([2, 1])
+        with value_col:
+            deal_indicative_value = st.number_input(
+                "Indicative commercial value",
+                min_value=0.0,
+                value=0.0,
+                step=1000.0,
+            )
+        with currency_col:
+            deal_currency = st.selectbox(
+                "Currency",
+                ["EUR", "USD", "BRL", "GBP", "Other"],
+            )
+        quotation_status = st.text_input(
+            "Quotation / proposal status",
+            placeholder="Not issued / requested / submitted / under review",
+        )
+        incoterm = st.text_input(
+            "Incoterm",
+            placeholder="e.g. EXW / FCA / FOB / CIF — if discussed",
+        )
+        payment_terms = st.text_input(
+            "Payment terms",
+        )
+        moq = st.text_input(
+            "MOQ / minimum order",
+        )
+
+    with deal_2:
+        delivery_terms = st.text_area(
+            "Delivery / lead-time terms",
+            height=70,
+        )
+        warranty_terms = st.text_area(
+            "Warranty terms",
+            height=70,
+        )
+        after_sales_model = st.text_area(
+            "After-sales / technical support model",
+            height=70,
+        )
+        exclusivity_terms = st.text_input(
+            "Exclusivity terms",
+        )
+        territory_terms = st.text_input(
+            "Territory terms",
+        )
+        commission_terms = st.text_input(
+            "Commission / success-fee terms",
+        )
+        technical_validation = st.text_area(
+            "Technical validation status",
+            height=70,
+        )
+        regulatory_validation = st.text_area(
+            "Regulatory / customs validation status",
+            height=70,
+        )
+
+    documents_exchanged = st.text_area(
+        "Documents exchanged",
+        placeholder="Technical sheet, quotation, NDA, drawings, certificates...",
+        height=70,
+    )
+    decision_makers = st.text_area(
+        "Decision makers / stakeholders",
+        height=70,
+    )
+    commercial_risks = st.text_area(
+        "Commercial risks / open issues",
+        height=70,
+    )
+    next_step_col, next_date_col = st.columns([2, 1])
+    with next_step_col:
+        deal_next_step = st.text_input(
+            "Deal next step",
+        )
+    with next_date_col:
+        deal_next_step_date = st.date_input(
+            "Deal next-step date",
+            value=None,
+        )
+    deal_notes = st.text_area(
+        "Deal notes",
+        height=80,
+    )
+
+    save_deal = st.form_submit_button(
+        "Save Commercial Deal Sheet",
+        type="primary",
+        use_container_width=True,
+    )
+
+if save_deal:
+    commercial_deal = build_commercial_deal_sheet(
+        lead,
+        deal_stage=deal_stage,
+        product=deal_product,
+        product_specification=product_specification,
+        quantity=deal_quantity,
+        indicative_value=deal_indicative_value,
+        currency=deal_currency,
+        quotation_status=quotation_status,
+        incoterm=incoterm,
+        payment_terms=payment_terms,
+        moq=moq,
+        delivery_terms=delivery_terms,
+        warranty_terms=warranty_terms,
+        after_sales_model=after_sales_model,
+        exclusivity_terms=exclusivity_terms,
+        territory_terms=territory_terms,
+        commission_terms=commission_terms,
+        technical_validation=technical_validation,
+        regulatory_validation=regulatory_validation,
+        documents_exchanged=documents_exchanged,
+        decision_makers=decision_makers,
+        commercial_risks=commercial_risks,
+        next_step=deal_next_step,
+        next_step_date=str(deal_next_step_date or ""),
+        deal_notes=deal_notes,
+    )
+    st.session_state[deal_key] = commercial_deal
+
+commercial_deal = st.session_state.get(deal_key)
+
+if commercial_deal:
+    deal_df = pd.DataFrame([commercial_deal])
+    d1, d2, d3 = st.columns(3)
+    d1.metric("Deal Stage", commercial_deal.get("deal_stage", ""))
+    deal_value = float(commercial_deal.get("deal_indicative_value", 0) or 0)
+    deal_currency_display = commercial_deal.get("deal_currency", "")
+    d2.metric(
+        "Indicative Value",
+        (
+            f"{deal_currency_display} {deal_value:,.0f}"
+            if deal_value > 0
+            else "To qualify"
+        ),
+    )
+    d3.metric(
+        "Deal Next Step",
+        commercial_deal.get("deal_next_step", "") or "To define",
+    )
+
+    st.download_button(
+        "⬇ Download Commercial Deal Sheet",
+        deal_df.to_csv(index=False).encode("utf-8"),
+        file_name=(
+            f"{safe_filename(lead['company'])}"
+            "_commercial_deal_sheet.csv"
+        ),
+        mime="text/csv",
+        use_container_width=True,
+    )
+
+
+# ---------------------------------------------------------------------
+# COMMERCIAL MANDATE REPORTING
+# ---------------------------------------------------------------------
+
+st.divider()
+st.subheader("📊 Commercial Mandate Reporting")
+st.caption(
+    "Operational reporting from the pipeline and the execution / deal records entered "
+    "in this session. Counts reflect recorded activity only."
+)
+
+execution_updates = [
+    value
+    for key, value in st.session_state.items()
+    if str(key).startswith("bd_execution::")
+    and isinstance(value, dict)
+]
+
+deal_sheets = [
+    value
+    for key, value in st.session_state.items()
+    if str(key).startswith("commercial_deal::")
+    and isinstance(value, dict)
+]
+
+mandate_report = build_mandate_report(
+    df,
+    execution_updates=execution_updates,
+    deal_sheets=deal_sheets,
+)
+
+if mandate_report.get("mandate_summary"):
+    st.markdown(
+        "**Mandate:** " + mandate_report["mandate_summary"]
+    )
+
+mr1, mr2, mr3, mr4 = st.columns(4)
+mr1.metric(
+    "Counterparties",
+    mandate_report["total_counterparties"],
+)
+mr2.metric(
+    "Qualified",
+    mandate_report["qualified_counterparties"],
+)
+mr3.metric(
+    "Responses",
+    mandate_report["responses"],
+)
+mr4.metric(
+    "Active Opportunities",
+    mandate_report["active_opportunities"],
+)
+
+mr5, mr6, mr7, mr8 = st.columns(4)
+mr5.metric("Contacted", mandate_report["contacted"])
+mr6.metric("Meetings", mandate_report["meetings"])
+mr7.metric("Quotations", mandate_report["quotations"])
+mr8.metric("Won", mandate_report["won"])
+
+pipeline_values = mandate_report.get(
+    "pipeline_value_by_currency",
+    {},
+)
+if pipeline_values:
+    st.markdown("**Indicative opportunity value entered**")
+    st.write(
+        " · ".join(
+            f"{currency} {value:,.0f}"
+            for currency, value in pipeline_values.items()
+        )
+    )
+
+pending_actions = mandate_report.get("pending_actions", [])
+if pending_actions:
+    st.markdown("**Next-action queue**")
+    st.dataframe(
+        pd.DataFrame(pending_actions),
+        hide_index=True,
+        use_container_width=True,
+    )
+
+report_markdown = report_to_markdown(mandate_report)
+report_col, execution_col, deals_col = st.columns(3)
+
+with report_col:
+    st.download_button(
+        "⬇ Mandate Report — Markdown",
+        report_markdown,
+        file_name="commercial_mandate_report.md",
+        mime="text/markdown",
+        use_container_width=True,
+    )
+
+with execution_col:
+    if execution_updates:
+        st.download_button(
+            "⬇ Execution Log — CSV",
+            pd.DataFrame(execution_updates)
+            .to_csv(index=False)
+            .encode("utf-8"),
+            file_name="bd_execution_log.csv",
+            mime="text/csv",
+            use_container_width=True,
+        )
+
+with deals_col:
+    if deal_sheets:
+        st.download_button(
+            "⬇ Deal Pipeline — CSV",
+            pd.DataFrame(deal_sheets)
+            .to_csv(index=False)
+            .encode("utf-8"),
+            file_name="commercial_deal_pipeline.csv",
+            mime="text/csv",
+            use_container_width=True,
+        )
+
+st.caption(
+    "Reporting metrics are workflow indicators from recorded activity. "
+    "They are not market-size, demand or conversion-rate claims."
+)
+
 
 # ---------------------------------------------------------------------
 # FOOTER
