@@ -40,6 +40,7 @@ from datetime import datetime
 import pandas as pd
 
 from commercial_mandate import mandate_from_mapping
+from trade_feasibility import feasibility_from_mapping
 import requests
 
 
@@ -775,6 +776,7 @@ def normalize_lead(
     }
 
     lead.update(mandate_from_mapping(row))
+    lead.update(feasibility_from_mapping(row))
 
     lead[
         "commercial_intelligence_mode"
