@@ -1870,6 +1870,7 @@ def apply_strategy_metadata(
             channel_for_touch(
                 profile,
                 index,
+                strategy.get("primary_channel"),
             )
         )
 
