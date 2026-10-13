@@ -24,7 +24,7 @@ from outreach_generator import (
 
 
 st.set_page_config(
-    page_title="Adaptive Outreach Intelligence",
+    page_title="Business Development Execution & Outreach",
     page_icon="📨",
     layout="wide",
 )
@@ -404,12 +404,12 @@ def touch_channel(
 # ---------------------------------------------------------------------
 
 st.title(
-    "📨 Adaptive Outreach Intelligence Platform"
+    "📨 Business Development Execution & Outreach"
 )
 
 st.caption(
-    "Turn pipeline context into prioritized, multilingual and adaptive "
-    "commercial outreach for Business Development, GTM and Partnerships."
+    "Turn mandate and qualification context into multilingual outreach, "
+    "qualified dialogue, follow-up and active commercial opportunities."
 )
 
 
@@ -464,8 +464,8 @@ with st.sidebar:
     )
 
     st.caption(
-        "Standard outreach CSVs and exports from the "
-        "Lead Qualification & Revenue Prioritization Platform are supported."
+        "Standard outreach CSVs and exports from "
+        "Counterparty Qualification & Commercial Priority are supported."
     )
 
     with st.expander(
@@ -1048,8 +1048,8 @@ if not territory_df.empty:
     st.divider()
     st.subheader("📝 Field Visit Debrief & Learning Loop")
     st.caption(
-        "Capture what was actually learned in the clinic, convert it into structured "
-        "qualification evidence, and export it for re-scoring in PRIORITIZE."
+        "Capture what was actually learned in the meeting or site visit, convert it into "
+        "structured qualification evidence, and export it for re-scoring in PRIORITIZE."
     )
 
     feedback_account_names = sorted(
@@ -1095,7 +1095,7 @@ if not territory_df.empty:
                 height=90,
             )
             patient_demand = st.text_area(
-                "Patient demand / unmet needs",
+                "Operational demand / unmet needs",
                 height=90,
             )
             decision_process = st.text_area(
@@ -1168,13 +1168,13 @@ st.divider()
 
 
 st.subheader(
-    "👔 Executive Outreach Dashboard"
+    "👔 Executive Business Development Dashboard"
 )
 
 
 st.caption(
-    "Prioritize commercial attention using qualification context, "
-    "engagement signals, proposal timing and adaptive outreach strategy."
+    "Prioritize commercial attention using mandate context, qualification evidence, "
+    "engagement signals, opportunity stage and next-action discipline."
 )
 
 
@@ -1472,7 +1472,7 @@ st.divider()
 
 
 st.subheader(
-    "🧩 Account & Outreach Intelligence Workspace"
+    "🧩 Account & Business Development Workspace"
 )
 
 
