@@ -645,3 +645,38 @@ def test_generate_sequence_falls_back_end_to_end_for_alessandra_handoff_v2():
     assert sequence["day_3"]["timing"] == "Day +3"
     assert sequence["day_7"]["timing"] == "Day +8"
     assert sequence["day_14"]["timing"] == "Day +16"
+
+
+def test_strategy_metadata_preserves_selected_primary_channel():
+    from outreach_generator import (
+        COUNTRY_PROFILE,
+        apply_strategy_metadata,
+        build_outreach_strategy,
+        normalize_lead,
+    )
+
+    lead = normalize_lead(
+        {
+            "company": "Example Industrial Buyer",
+            "country": "Italy",
+            "industry": "Industrial Manufacturing",
+            "linkedin_url": "https://linkedin.com/in/example",
+            "sales_motion": "Ready for Qualification Outreach",
+        }
+    )
+    profile = COUNTRY_PROFILE["Italy"]
+    strategy = build_outreach_strategy(lead, profile)
+    assert strategy["primary_channel"] == "LinkedIn"
+
+    sequence = {
+        "day_1": {"message": "A"},
+        "day_3": {"message": "B"},
+        "day_7": {"message": "C"},
+        "day_14": {"message": "D"},
+    }
+    enriched = apply_strategy_metadata(sequence, strategy, profile)
+
+    assert all(
+        touch["channel"] == "LinkedIn"
+        for touch in enriched.values()
+    )
