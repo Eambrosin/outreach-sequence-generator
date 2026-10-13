@@ -12,6 +12,7 @@ MANDATE_FIELDS = [
     "mandate_status",
     "mandate_client",
     "mandate_corridor",
+    "mandate_counterparty_focus",
     "mandate_origin_market",
     "mandate_target_market",
     "mandate_product",
@@ -52,6 +53,7 @@ class CommercialMandate:
     mandate_status: str = "Active"
     mandate_client: str = ""
     mandate_corridor: str = ""
+    mandate_counterparty_focus: str = "Buyers"
     mandate_origin_market: str = ""
     mandate_target_market: str = ""
     mandate_product: str = ""
