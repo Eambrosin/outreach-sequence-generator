@@ -38,6 +38,8 @@ import re
 from datetime import datetime
 
 import pandas as pd
+
+from commercial_mandate import mandate_from_mapping
 import requests
 
 
@@ -771,6 +773,8 @@ def normalize_lead(
             first_value(row, ["vendor_company"], "")
         ).strip(),
     }
+
+    lead.update(mandate_from_mapping(row))
 
     lead[
         "commercial_intelligence_mode"
