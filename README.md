@@ -111,7 +111,10 @@ Creates a multilingual sequence that preserves qualification-first language and 
 - optional AI-assisted copy
 - territory and field-sales context
 - field-day planning
-- visit-feedback loop
+- visit / meeting feedback loop
+- Business Development Execution Log
+- Commercial Deal Sheet
+- Commercial Mandate Reporting
 - portable upstream handoffs
 - CSV import / export
 - automated tests and GitHub Actions CI
@@ -181,6 +184,61 @@ ACTIVE OPPORTUNITY
   ↓
 NEXT ACTION
 ```
+
+---
+
+## Commercial Deal Sheet
+
+When a conversation becomes an active opportunity, ENGAGE can structure the commercial negotiation in a **Commercial Deal Sheet**.
+
+The deal sheet can preserve:
+
+- product / technical scope
+- quantity
+- indicative commercial value and currency
+- quotation / proposal status
+- Incoterm, when discussed
+- payment terms
+- MOQ
+- delivery / lead-time terms
+- warranty
+- after-sales / technical-support model
+- exclusivity and territory terms
+- commission / success-fee terms
+- technical and regulatory validation status
+- documents exchanged
+- decision makers / stakeholders
+- commercial risks
+- next step and next-step date
+
+Mandate context and Trade Feasibility status remain attached to the deal.
+
+The sheet organizes negotiation context; it does not generate legal conclusions or substitute contract review.
+
+---
+
+## Commercial Mandate Reporting
+
+ENGAGE can aggregate the currently loaded pipeline together with execution updates and deal sheets into an operational mandate report.
+
+Current indicators include:
+
+- counterparties in pipeline
+- qualified counterparties
+- high-priority counterparties
+- contacted accounts
+- responses
+- meetings
+- active opportunities
+- quotations / proposals
+- wins
+- indicative opportunity value by currency
+- next-action queue
+- top recorded opportunities
+
+Reports can be exported as Markdown, while execution updates and deal sheets can be exported as CSV.
+
+Metrics reflect records entered or loaded in the workflow. They are not market-size, buyer-demand or conversion-rate claims.
 
 ---
 
