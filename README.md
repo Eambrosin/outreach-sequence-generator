@@ -99,6 +99,30 @@ Creates a multilingual sequence that preserves qualification-first language and 
 
 ---
 
+## Ambrosin Mandate Workspace
+
+ENGAGE is the execution layer of the shared **Commercial Mandate Workspace**.
+
+It can load the portable Commercial Mandate JSON or resolve mandate context already embedded in an upstream pipeline. That context remains attached while the workflow progresses from outreach to response, meeting, opportunity, deal sheet and client-ready mandate reporting.
+
+Recommended progression:
+
+```text
+PRIORITIZE / PARTNER
+        ↓
+      ENGAGE
+        ↓
+Qualified Dialogue
+        ↓
+Active Opportunity
+        ↓
+Commercial Deal Sheet
+        ↓
+Mandate Reporting
+```
+
+---
+
 ## Core Capabilities
 
 - qualification-aware outreach strategy
