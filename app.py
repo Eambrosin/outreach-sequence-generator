@@ -1600,6 +1600,12 @@ with profile_col_1:
         f"{optional(lead['industry'])}"
     )
 
+    if lead.get("counterparty_role"):
+        st.write(
+            f"**Counterparty Role:** "
+            f"{lead['counterparty_role']}"
+        )
+
     st.write(
         f"**Company Size:** "
         f"{optional(lead['company_size'])}"
