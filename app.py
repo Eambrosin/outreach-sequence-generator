@@ -605,12 +605,6 @@ if mandate_file is not None:
         st.error(f"Could not load Commercial Mandate: {exc}")
 
 
-render_mandate_workspace(
-    st,
-    "ENGAGE",
-    mandate_override,
-)
-
 uploaded = st.file_uploader(
     "Upload Pipeline CSV",
     type=[
@@ -672,6 +666,17 @@ if raw_df.empty:
     )
 
     st.stop()
+
+
+workspace_mandate = (
+    mandate_override
+    or raw_df.iloc[0].to_dict()
+)
+render_mandate_workspace(
+    st,
+    "ENGAGE",
+    workspace_mandate,
+)
 
 
 missing = validate_pipeline(
