@@ -3025,6 +3025,43 @@ with deals_col:
             use_container_width=True,
         )
 
+snapshot_mandate = mandate_from_mapping(
+    mandate_override
+    or (
+        raw_df.iloc[0].to_dict()
+        if not raw_df.empty
+        else {}
+    )
+)
+workspace_snapshot_export = build_workspace_snapshot(
+    mandate=snapshot_mandate,
+    pipeline_records=raw_df.to_dict(orient="records"),
+    execution_updates=execution_updates,
+    deal_sheets=deal_sheets,
+    field_visit_feedback=st.session_state.get(
+        "field_visit_feedback_records",
+        [],
+    ),
+    source_name=source_name,
+)
+
+st.markdown("**Workspace persistence**")
+st.download_button(
+    "💾 Save Mandate Workspace Snapshot",
+    snapshot_to_json(workspace_snapshot_export),
+    file_name=snapshot_filename(workspace_snapshot_export),
+    mime="application/json",
+    use_container_width=True,
+    help=(
+        "Save mandate, pipeline, execution updates, deal sheets and field-visit "
+        "feedback in one portable file so the workspace can be resumed later."
+    ),
+)
+st.caption(
+    "Workspace Snapshots may contain commercially sensitive information. "
+    "Store and share them according to the confidentiality requirements of the mandate."
+)
+
 st.caption(
     "Reporting metrics are workflow indicators from recorded activity. "
     "They are not market-size, demand or conversion-rate claims."
