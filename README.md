@@ -123,6 +123,27 @@ Mandate Reporting
 
 ---
 
+## Workspace Snapshot
+
+ENGAGE can save the active Business Development operation as a portable **Mandate Workspace Snapshot**.
+
+The snapshot preserves:
+
+- Commercial Mandate context
+- current pipeline records
+- Business Development execution updates
+- Commercial Deal Sheets
+- field-visit feedback
+- source metadata
+
+A saved snapshot can be uploaded later to resume the same workspace after the Streamlit session has ended.
+
+The snapshot is a portable persistence layer, not a shared database. It is designed to preserve continuity before introducing database-backed multi-user persistence.
+
+Because snapshots may contain commercially sensitive information, they should be stored and shared according to the confidentiality requirements of the mandate.
+
+---
+
 ## Core Capabilities
 
 - qualification-aware outreach strategy
