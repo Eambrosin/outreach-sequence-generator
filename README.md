@@ -115,6 +115,8 @@ Creates a multilingual sequence that preserves qualification-first language and 
 - Business Development Execution Log
 - Commercial Deal Sheet
 - Commercial Mandate Reporting
+- mandate funnel and client-ready reporting
+- portable Commercial Mandate JSON
 - portable upstream handoffs
 - CSV import / export
 - automated tests and GitHub Actions CI
