@@ -137,8 +137,10 @@ Consumes structured context such as:
 - qualification questions
 - evidence gaps
 - account / territory context
+- counterparty role
+- Commercial Mandate context
 
-This mode is designed to preserve upstream commercial reasoning.
+This mode is designed to preserve upstream commercial reasoning. A portable mandate JSON can also be loaded directly when the pipeline itself does not already contain mandate metadata.
 
 ### Standard Outreach Mode
 
