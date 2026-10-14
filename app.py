@@ -613,6 +613,12 @@ if uploaded is not None:
         uploaded
     )
 
+    if mandate_override:
+        raw_df = apply_mandate_fields(
+            raw_df,
+            mandate_override,
+        )
+
     source_name = (
         uploaded.name
     )
@@ -635,6 +641,12 @@ else:
     raw_df = pd.read_csv(
         sample_path
     )
+
+    if mandate_override:
+        raw_df = apply_mandate_fields(
+            raw_df,
+            mandate_override,
+        )
 
     source_name = str(
         sample_path
