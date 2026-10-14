@@ -2831,6 +2831,30 @@ mr6.metric("Meetings", mandate_report["meetings"])
 mr7.metric("Quotations", mandate_report["quotations"])
 mr8.metric("Won", mandate_report["won"])
 
+st.markdown("**Mandate funnel**")
+funnel_df = pd.DataFrame(build_funnel_rows(mandate_report))
+st.dataframe(
+    funnel_df,
+    hide_index=True,
+    use_container_width=True,
+    column_config={
+        "Share of current pipeline": st.column_config.NumberColumn(
+            "Share of current pipeline",
+            format="%.1f%%",
+        ),
+    },
+)
+
+reporting_period = st.text_input(
+    "Client reporting period",
+    value=date.today().strftime("%B %Y"),
+    help="Used only in the client-ready mandate report export.",
+)
+client_report_markdown = client_report_to_markdown(
+    mandate_report,
+    reporting_period=reporting_period,
+)
+
 pipeline_values = mandate_report.get(
     "pipeline_value_by_currency",
     {},
