@@ -2878,7 +2878,7 @@ if pending_actions:
     )
 
 report_markdown = report_to_markdown(mandate_report)
-report_col, execution_col, deals_col = st.columns(3)
+report_col, client_report_col, execution_col, deals_col = st.columns(4)
 
 with report_col:
     st.download_button(
@@ -2887,6 +2887,16 @@ with report_col:
         file_name="commercial_mandate_report.md",
         mime="text/markdown",
         use_container_width=True,
+    )
+
+with client_report_col:
+    st.download_button(
+        "⬇ Client Report — Markdown",
+        client_report_markdown,
+        file_name="ambrosin_client_mandate_report.md",
+        mime="text/markdown",
+        use_container_width=True,
+        help="Client-ready operational report with mandate context, funnel, opportunity value and next actions.",
     )
 
 with execution_col:
