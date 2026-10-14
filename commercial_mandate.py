@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, asdict
+import json
+import re
 from typing import Any, Mapping
 
 MANDATE_SCHEMA_VERSION = "1.0"
@@ -122,3 +124,32 @@ def mandate_summary(row: Mapping[str, Any]) -> str:
         payload.get("mandate_target_market", ""),
     ]
     return " · ".join(part for part in parts if part)
+
+
+def mandate_to_json(mandate: Mapping[str, Any], *, indent: int = 2) -> str:
+    return json.dumps(
+        mandate_from_mapping(mandate),
+        ensure_ascii=False,
+        indent=indent,
+    )
+
+
+def mandate_from_json(payload: str | bytes) -> dict[str, str]:
+    if isinstance(payload, bytes):
+        payload = payload.decode("utf-8")
+    data = json.loads(str(payload))
+    if not isinstance(data, dict):
+        raise ValueError("Commercial Mandate JSON must contain one object.")
+    return mandate_from_mapping(data)
+
+
+def mandate_filename(mandate: Mapping[str, Any]) -> str:
+    payload = mandate_from_mapping(mandate)
+    base = (
+        payload.get("mandate_name")
+        or payload.get("mandate_client")
+        or payload.get("mandate_product")
+        or "commercial_mandate"
+    )
+    slug = re.sub(r"[^a-zA-Z0-9]+", "_", base).strip("_").lower()
+    return f"{slug or 'commercial_mandate'}_mandate.json"
