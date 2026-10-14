@@ -1,4 +1,5 @@
 import html
+import hashlib
 from datetime import date
 import os
 from pathlib import Path
@@ -13,6 +14,7 @@ from commercial_mandate import (
     apply_mandate_fields,
     has_mandate_context,
     mandate_from_json,
+    mandate_from_mapping,
     mandate_summary,
 )
 from bd_execution import (
@@ -31,6 +33,12 @@ from mandate_reporting import (
 from client_reporting import (
     build_funnel_rows,
     client_report_to_markdown,
+)
+from workspace_snapshot import (
+    build_workspace_snapshot,
+    snapshot_filename,
+    snapshot_from_json,
+    snapshot_to_json,
 )
 from outreach_generator import (
     COUNTRY_PROFILE,
