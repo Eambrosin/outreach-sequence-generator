@@ -5,7 +5,7 @@ from typing import Any, Iterable, Mapping
 
 import pandas as pd
 
-from commercial_mandate import mandate_summary
+from commercial_mandate import mandate_from_mapping, mandate_summary
 
 
 ACTIVE_OPPORTUNITY_STAGES = {
@@ -188,8 +188,11 @@ def build_mandate_report(
     elif deals:
         mandate_context = deals[0]
 
+    mandate_payload = mandate_from_mapping(mandate_context)
+
     return {
         "mandate_summary": mandate_summary(mandate_context),
+        "mandate_context": mandate_payload,
         "total_counterparties": total_counterparties,
         "qualified_counterparties": qualified,
         "high_priority_counterparties": high_priority,
