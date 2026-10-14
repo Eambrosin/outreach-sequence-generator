@@ -116,6 +116,7 @@ Creates a multilingual sequence that preserves qualification-first language and 
 - Commercial Deal Sheet
 - Commercial Mandate Reporting
 - mandate funnel and client-ready reporting
+- shared Ambrosin Mandate Workspace navigation
 - portable Commercial Mandate JSON
 - portable upstream handoffs
 - CSV import / export
