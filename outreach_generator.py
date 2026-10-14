@@ -709,6 +709,14 @@ def normalize_lead(
             first_value(row, ["commercial_track"], "")
         ).strip(),
 
+        "counterparty_role": str(
+            first_value(row, ["counterparty_role"], "")
+        ).strip(),
+
+        "counterparty_role_basis": str(
+            first_value(row, ["counterparty_role_basis"], "")
+        ).strip(),
+
         "qualification_readiness_score": safe_float(
             first_value(row, ["qualification_readiness_score"], 0),
             0,
