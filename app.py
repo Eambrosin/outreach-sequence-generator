@@ -595,16 +595,87 @@ enrichment_evidence_url""",
 
 
 # ---------------------------------------------------------------------
-# LOAD PIPELINE
+# LOAD / RESUME WORKSPACE
 # ---------------------------------------------------------------------
+
+snapshot_file = st.file_uploader(
+    "Resume Workspace Snapshot",
+    type=["json"],
+    key="workspace_snapshot_json",
+    help=(
+        "Restore a saved ENGAGE workspace including mandate, pipeline, "
+        "execution updates, deal sheets and field-visit feedback."
+    ),
+)
+
+workspace_snapshot = {}
+if snapshot_file is not None:
+    try:
+        snapshot_bytes = snapshot_file.getvalue()
+        workspace_snapshot = snapshot_from_json(snapshot_bytes)
+        snapshot_hash = hashlib.sha256(snapshot_bytes).hexdigest()
+
+        if st.session_state.get("workspace_snapshot_loaded_hash") != snapshot_hash:
+            for record in workspace_snapshot.get("execution_updates", []):
+                company = str(
+                    record.get("company_name")
+                    or record.get("company")
+                    or ""
+                ).strip()
+                if company:
+                    st.session_state[
+                        f"bd_execution::{safe_filename(company)}"
+                    ] = record
+
+            for record in workspace_snapshot.get("deal_sheets", []):
+                company = str(
+                    record.get("company_name")
+                    or record.get("company")
+                    or ""
+                ).strip()
+                if company:
+                    st.session_state[
+                        f"commercial_deal::{safe_filename(company)}"
+                    ] = record
+
+            restored_feedback = workspace_snapshot.get(
+                "field_visit_feedback",
+                [],
+            )
+            if restored_feedback:
+                st.session_state[
+                    "field_visit_feedback_records"
+                ] = restored_feedback
+
+            st.session_state["workspace_snapshot_loaded_hash"] = snapshot_hash
+
+        st.success(
+            "Workspace Snapshot restored: "
+            f"{len(workspace_snapshot.get('pipeline', []))} pipeline records, "
+            f"{len(workspace_snapshot.get('execution_updates', []))} execution updates and "
+            f"{len(workspace_snapshot.get('deal_sheets', []))} deal sheets."
+        )
+    except Exception as exc:
+        st.error(f"Could not restore Workspace Snapshot: {exc}")
+        workspace_snapshot = {}
+
 
 mandate_file = st.file_uploader(
     "Optional Commercial Mandate JSON",
     type=["json"],
     key="commercial_mandate_json",
-    help="Load the same portable mandate used across the Commercial Intelligence workflow.",
+    help=(
+        "Optional override. Load the same portable mandate used across the "
+        "Commercial Intelligence workflow."
+    ),
 )
-mandate_override = {}
+
+mandate_override = (
+    workspace_snapshot.get("mandate", {})
+    if workspace_snapshot
+    else {}
+)
+
 if mandate_file is not None:
     try:
         mandate_override = mandate_from_json(mandate_file.getvalue())
@@ -613,57 +684,62 @@ if mandate_file is not None:
         st.error(f"Could not load Commercial Mandate: {exc}")
 
 
-uploaded = st.file_uploader(
-    "Upload Pipeline CSV",
-    type=[
-        "csv"
-    ],
-)
-
-
-if uploaded is not None:
-
-    raw_df = pd.read_csv(
-        uploaded
+if workspace_snapshot and workspace_snapshot.get("pipeline"):
+    uploaded = None
+    raw_df = pd.DataFrame(
+        workspace_snapshot["pipeline"]
     )
-
-    if mandate_override:
-        raw_df = apply_mandate_fields(
-            raw_df,
-            mandate_override,
-        )
-
     source_name = (
-        uploaded.name
+        workspace_snapshot.get("source_name")
+        or "Workspace Snapshot"
+    )
+    st.caption(
+        "Pipeline restored from the Workspace Snapshot. "
+        "To use a different pipeline, remove the snapshot and upload a CSV."
     )
 
 else:
-
-    sample_path = Path(
-        "data/pipeline.csv"
+    uploaded = st.file_uploader(
+        "Upload Pipeline CSV",
+        type=["csv"],
     )
 
-    if not sample_path.exists():
+    if uploaded is not None:
 
-        st.info(
-            "Upload a pipeline CSV to start. "
-            "No default data/pipeline.csv was found."
+        raw_df = pd.read_csv(
+            uploaded
         )
 
-        st.stop()
+        source_name = uploaded.name
 
-    raw_df = pd.read_csv(
-        sample_path
-    )
+    else:
 
-    if mandate_override:
-        raw_df = apply_mandate_fields(
-            raw_df,
-            mandate_override,
+        sample_path = Path(
+            "data/pipeline.csv"
         )
 
-    source_name = str(
-        sample_path
+        if not sample_path.exists():
+
+            st.info(
+                "Upload a pipeline CSV to start. "
+                "No default data/pipeline.csv was found."
+            )
+
+            st.stop()
+
+        raw_df = pd.read_csv(
+            sample_path
+        )
+
+        source_name = str(
+            sample_path
+        )
+
+
+if mandate_override:
+    raw_df = apply_mandate_fields(
+        raw_df,
+        mandate_override,
     )
 
 
