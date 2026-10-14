@@ -7,7 +7,12 @@ import streamlit as st
 
 from field_planner import build_field_day_plan
 from visit_feedback import OUTCOME_SIGNALS, build_visit_feedback
-from commercial_mandate import has_mandate_context, mandate_summary
+from commercial_mandate import (
+    apply_mandate_fields,
+    has_mandate_context,
+    mandate_from_json,
+    mandate_summary,
+)
 from bd_execution import (
     OPPORTUNITY_STAGES,
     RESPONSE_STATUSES,
