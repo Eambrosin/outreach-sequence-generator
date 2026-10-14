@@ -240,7 +240,7 @@ Current indicators include:
 - next-action queue
 - top recorded opportunities
 
-Reports can be exported as Markdown, while execution updates and deal sheets can be exported as CSV.
+Reports can be exported as Markdown, including a client-ready Ambrosin mandate report with reporting period, mandate context, funnel, indicative opportunity value, priority opportunities and next actions. Execution updates and deal sheets remain exportable as CSV.
 
 Metrics reflect records entered or loaded in the workflow. They are not market-size, buyer-demand or conversion-rate claims.
 
