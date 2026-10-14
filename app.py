@@ -27,6 +27,10 @@ from mandate_reporting import (
     build_mandate_report,
     report_to_markdown,
 )
+from client_reporting import (
+    build_funnel_rows,
+    client_report_to_markdown,
+)
 from outreach_generator import (
     COUNTRY_PROFILE,
     DEFAULT_PROFILE,
