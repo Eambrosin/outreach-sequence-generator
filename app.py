@@ -8,6 +8,7 @@ import streamlit as st
 
 from field_planner import build_field_day_plan
 from visit_feedback import OUTCOME_SIGNALS, build_visit_feedback
+from mandate_workspace import render_mandate_workspace
 from commercial_mandate import (
     apply_mandate_fields,
     has_mandate_context,
@@ -603,6 +604,12 @@ if mandate_file is not None:
     except Exception as exc:
         st.error(f"Could not load Commercial Mandate: {exc}")
 
+
+render_mandate_workspace(
+    st,
+    "ENGAGE",
+    mandate_override,
+)
 
 uploaded = st.file_uploader(
     "Upload Pipeline CSV",
