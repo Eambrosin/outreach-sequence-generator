@@ -55,13 +55,15 @@ Configure the following only in Streamlit's server-side Secrets settings:
 
 ```toml
 AMBROSIN_SUPABASE_URL = "https://YOUR_PROJECT.supabase.co"
-AMBROSIN_SUPABASE_KEY = "YOUR_SERVER_SIDE_SERVICE_ROLE_KEY"
+AMBROSIN_SUPABASE_KEY = "sb_secret_..."
 AMBROSIN_WORKSPACE_ACCESS_TOKEN = "A_SEPARATE_PRIVATE_WORKSPACE_PASSWORD"
 AMBROSIN_SUPABASE_MANDATES_TABLE = "commercial_mandates"
 AMBROSIN_SUPABASE_WORKSPACES_TABLE = "commercial_workspaces"
 ```
 
 The two table-name variables are optional because the application already uses those names by default.
+
+Use the current Supabase **Secret key** format (`sb_secret_...`) when available. Supabase is migrating away from the legacy `service_role` key. The application sends the secret key only through the `apikey` header.
 
 `AMBROSIN_WORKSPACE_ACCESS_TOKEN` is required before cloud persistence is considered enabled. It is deliberately separate from the Supabase credential. A user of the public Streamlit app must enter this private workspace token before the app can list, read or write cloud mandate records.
 
@@ -70,12 +72,12 @@ The two table-name variables are optional because the application already uses t
 Do not:
 
 - commit the Supabase key or Workspace Access Token to GitHub
-- paste the service-role key into application source code
+- paste the Supabase Secret key into application source code
 - expose the database credential in a browser-side application
 - place the Workspace Access Token in query parameters or shared links
 - disable RLS merely to make the REST calls work
 
-The service-role key should exist only in server-side Streamlit secrets. It bypasses RLS and therefore must be treated as a privileged credential.
+The Supabase Secret key should exist only in server-side Streamlit secrets. It bypasses RLS and therefore must be treated as a privileged credential.
 
 For a future multi-user client portal, replace this server-only model with authenticated users, organization/mandate ownership and explicit RLS policies.
 
