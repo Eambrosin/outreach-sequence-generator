@@ -9,6 +9,7 @@
 ![Streamlit](https://img.shields.io/badge/Streamlit-App-FF4B4B?logo=streamlit&logoColor=white)
 ![Commercial Intelligence](https://img.shields.io/badge/Commercial%20Intelligence-ENGAGE-8250df)
 [![Python CI](https://github.com/Eambrosin/outreach-sequence-generator/actions/workflows/ci.yml/badge.svg)](https://github.com/Eambrosin/outreach-sequence-generator/actions/workflows/ci.yml)
+[![Release](https://img.shields.io/badge/Release-v3.0.0-success)](https://github.com/Eambrosin/outreach-sequence-generator/releases/tag/v3.0.0)
 [![License](https://img.shields.io/badge/License-All%20Rights%20Reserved-lightgrey)](LICENSE)
 
 A Commercial Intelligence application that converts mandate and qualification context into adaptive multilingual outreach, qualified dialogue, follow-up and structured opportunity execution while preserving evidence, qualification gaps and channel availability.
@@ -436,25 +437,32 @@ Optional AI features require the relevant API key in environment variables or St
 
 ## Current Version
 
-**Main branch — Workspace-enabled ENGAGE**
+**v3.0.0 — Business Development Execution & Outreach**
 
-The tagged v2.1 release established adaptive, qualification-aware outreach. The current main branch extends it with:
+Version 3.0 is the current stable release of ENGAGE. It expands the application from adaptive outreach into the operational execution and reporting layer of the Commercial Intelligence portfolio.
 
-- shared private Commercial Mandate persistence
+Key release capabilities include:
+
+- shared private Commercial Mandate and workspace persistence
 - automatic `mandate_id` restoration
-- mandate-safe pipeline behavior
+- qualified pipeline intake from PRIORITIZE and PARTNER
+- mandate-safe behavior with no demo-data mixing
 - Workspace Snapshot recovery
+- adaptive multilingual outreach
 - Business Development Execution Log
+- field-visit feedback loop
 - Commercial Deal Sheet
-- mandate funnel and client reporting
-- continuity from PRIORITIZE and PARTNER into execution
+- opportunity and next-action management
+- mandate funnel and client-ready reporting
 
-The main branch extends the tagged release without claiming an unpublished release number.
+**[View v3.0.0 Release](https://github.com/Eambrosin/outreach-sequence-generator/releases/tag/v3.0.0)**  
+[Release Notes](docs/RELEASE_NOTES_v3.0.0.md)
 
 ---
 
 ## Documentation
 
+- [v3.0.0 Release Notes](docs/RELEASE_NOTES_v3.0.0.md)
 - [Detailed Technical Reference](docs/TECHNICAL_REFERENCE.md)
 - [Portfolio Demo Flow](docs/PORTFOLIO_DEMO.md)
 - [Tests](tests/)
