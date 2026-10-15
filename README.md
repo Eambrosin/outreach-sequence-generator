@@ -61,7 +61,7 @@ NEXT ACTION
 VISIT / RESPONSE FEEDBACK
 ```
 
-The system can work independently or consume upstream handoffs from IDENTIFY and PRIORITIZE.
+The system can work independently or consume upstream handoffs from IDENTIFY, PRIORITIZE and PARTNER.
 
 ---
 
@@ -105,6 +105,8 @@ ENGAGE is the execution layer of the shared **Commercial Mandate Workspace**.
 
 It can resolve a saved Commercial Mandate automatically from the shared private workspace, load portable Commercial Mandate JSON, or inherit mandate context already embedded in an upstream pipeline. Cross-module navigation carries only the opaque **mandate_id**; after Private Workspace Access is granted, the canonical mandate is restored and remains attached while the workflow progresses from outreach to response, meeting, opportunity, deal sheet and client-ready mandate reporting.
 
+When an active mandate is loaded without an upstream pipeline, ENGAGE waits for a qualified CSV or Workspace Snapshot rather than falling back to demo data. This prevents sample accounts from being mixed into a live commercial mandate.
+
 Recommended progression:
 
 ```text
@@ -138,7 +140,7 @@ The snapshot preserves:
 
 A saved snapshot can be uploaded later to resume the same workspace after the Streamlit session has ended.
 
-The snapshot is a portable persistence layer, not a shared database. It is designed to preserve continuity before introducing database-backed multi-user persistence.
+The snapshot is a portable recovery and handoff layer that complements the shared Supabase-backed workspace. It preserves a point-in-time operational state for portability, recovery and controlled transfer between sessions.
 
 Because snapshots may contain commercially sensitive information, they should be stored and shared according to the confidentiality requirements of the mandate.
 
