@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from typing import Any, Mapping
+from urllib.parse import urlencode
 
 APP_URLS = {
     "IDENTIFY": "https://opportunity-discovery-intelligence-eambrosin.streamlit.app/",
@@ -24,6 +25,23 @@ def _clean(value: Any) -> str:
     if text.lower() in {"nan", "none", "<na>", "null"}:
         return ""
     return text
+
+
+def stage_url(
+    stage: str,
+    mandate: Mapping[str, Any] | None = None,
+) -> str:
+    stage = _clean(stage).upper()
+    if stage not in APP_URLS:
+        raise ValueError(f"Unknown Commercial Intelligence stage: {stage}")
+
+    base = APP_URLS[stage]
+    mandate_id = _clean((mandate or {}).get("mandate_id"))
+    if not mandate_id:
+        return base
+
+    separator = "&" if "?" in base else "?"
+    return f"{base}{separator}{urlencode({'mandate_id': mandate_id})}"
 
 
 def workspace_plan(
@@ -103,7 +121,7 @@ def render_mandate_workspace(st, current_stage: str, mandate: Mapping[str, Any] 
                 st.caption(APP_LABELS[stage])
                 st.link_button(
                     f"Open {stage}",
-                    APP_URLS[stage],
+                    stage_url(stage, mandate),
                     use_container_width=True,
                 )
 
