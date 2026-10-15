@@ -87,10 +87,18 @@ def ensure_mandate_id(mandate: Mapping[str, Any]) -> str:
 
 
 def _headers(config: Mapping[str, Any], merge: bool = False) -> dict[str, str]:
+    key = str(config["key"]).strip()
     headers = {
-        "apikey": str(config["key"]),
+        "apikey": key,
         "Content-Type": "application/json",
     }
+
+    # Legacy service_role keys are JWTs and still require an Authorization
+    # bearer token for PostgREST role propagation. New sb_secret_* keys are
+    # opaque and should be sent as API keys only; Supabase handles translation.
+    if key.count(".") == 2:
+        headers["Authorization"] = f"Bearer {key}"
+
     if merge:
         headers["Prefer"] = "resolution=merge-duplicates,return=representation"
     return headers
