@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hmac
 import json
 import os
 import uuid
@@ -28,12 +29,50 @@ def config_from_streamlit(st) -> dict[str, str]:
     return {
         "url": _secret(st, "AMBROSIN_SUPABASE_URL"),
         "key": _secret(st, "AMBROSIN_SUPABASE_KEY"),
+        "access_token": _secret(st, "AMBROSIN_WORKSPACE_ACCESS_TOKEN"),
         "table": _secret(st, "AMBROSIN_SUPABASE_MANDATES_TABLE") or "commercial_mandates",
     }
 
 
 def is_enabled(config: Mapping[str, Any]) -> bool:
-    return bool(_clean(config.get("url")) and _clean(config.get("key")))
+    return bool(
+        _clean(config.get("url"))
+        and _clean(config.get("key"))
+        and _clean(config.get("access_token"))
+    )
+
+
+def workspace_access_granted(st, key_prefix: str) -> bool:
+    config = config_from_streamlit(st)
+    if not is_enabled(config):
+        return False
+
+    session_key = f"{key_prefix}_workspace_authorized"
+    if st.session_state.get(session_key):
+        return True
+
+    entered = st.text_input(
+        "Private Workspace Access",
+        type="password",
+        key=f"{key_prefix}_workspace_access_input",
+        help=(
+            "Required to read or write the private Ambrosin cloud workspace. "
+            "This token is separate from the database credential."
+        ),
+    )
+    if not entered:
+        return False
+
+    if hmac.compare_digest(
+        str(entered),
+        str(config["access_token"]),
+    ):
+        st.session_state[session_key] = True
+        st.success("Private Workspace access granted.")
+        return True
+
+    st.error("Invalid Private Workspace access token.")
+    return False
 
 
 def ensure_mandate_id(mandate: Mapping[str, Any]) -> str:
@@ -159,6 +198,12 @@ def load_saved_mandate(st, key_prefix: str) -> dict[str, Any]:
     if not is_enabled(config):
         return {}
 
+    if not workspace_access_granted(st, key_prefix):
+        st.caption(
+            "Cloud mandate handoff is protected. Enter Private Workspace Access to enable it."
+        )
+        return {}
+
     query_mandate_id = _query_mandate_id(st)
     if query_mandate_id:
         try:
@@ -229,6 +274,9 @@ def render_save_control(
         st.caption(
             "Shared cloud persistence is optional. Portable mandate JSON remains available."
         )
+        return payload
+
+    if not workspace_access_granted(st, key_prefix):
         return payload
 
     if st.button(
