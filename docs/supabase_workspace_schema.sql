@@ -54,3 +54,7 @@ grant select, insert, update, delete
 grant select, insert, update, delete
     on table public.commercial_workspaces
     to service_role;
+
+
+revoke all privileges on table public.commercial_mandates from anon, authenticated;
+revoke all privileges on table public.commercial_workspaces from anon, authenticated;
