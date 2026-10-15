@@ -108,10 +108,78 @@ def list_mandates(config: Mapping[str, Any]) -> list[dict[str, Any]]:
     return data if isinstance(data, list) else []
 
 
+def get_mandate_by_id(
+    config: Mapping[str, Any],
+    mandate_id: str,
+) -> dict[str, Any]:
+    if not is_enabled(config):
+        return {}
+
+    mandate_id = _clean(mandate_id)
+    if not mandate_id:
+        return {}
+
+    endpoint = f"{str(config['url']).rstrip('/')}/rest/v1/{config['table']}"
+    response = requests.get(
+        endpoint,
+        params={
+            "select": "mandate_id,mandate_name,mandate_status,mandate_client,mandate_target_market,mandate_product,payload,updated_at",
+            "mandate_id": f"eq.{mandate_id}",
+            "limit": "1",
+        },
+        headers=_headers(config),
+        timeout=20,
+    )
+    response.raise_for_status()
+    data = response.json()
+
+    if not isinstance(data, list) or not data:
+        return {}
+
+    record = data[0]
+    payload = record.get("payload")
+    result = dict(payload) if isinstance(payload, dict) else {}
+    result["mandate_id"] = _clean(record.get("mandate_id")) or mandate_id
+    return result
+
+
+def _query_mandate_id(st) -> str:
+    try:
+        value = st.query_params.get("mandate_id", "")
+    except Exception:
+        return ""
+
+    if isinstance(value, list):
+        value = value[0] if value else ""
+    return _clean(value)
+
+
 def load_saved_mandate(st, key_prefix: str) -> dict[str, Any]:
     config = config_from_streamlit(st)
     if not is_enabled(config):
         return {}
+
+    query_mandate_id = _query_mandate_id(st)
+    if query_mandate_id:
+        try:
+            resolved = get_mandate_by_id(
+                config,
+                query_mandate_id,
+            )
+        except Exception as exc:
+            st.warning(
+                f"Could not resolve mandate {query_mandate_id}: {exc}"
+            )
+            resolved = {}
+
+        if resolved:
+            st.session_state[
+                f"{key_prefix}_active_mandate_id"
+            ] = query_mandate_id
+            st.success(
+                "Commercial Mandate loaded automatically from the shared workspace."
+            )
+            return resolved
 
     try:
         records = list_mandates(config)
