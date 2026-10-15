@@ -217,13 +217,19 @@ def load_saved_mandate(st, key_prefix: str) -> dict[str, Any]:
         )
         return {}
 
-    if not workspace_access_granted(st, key_prefix):
-        st.caption(
-            "Cloud mandate handoff is protected. Enter Private Workspace Access to enable it."
-        )
-        return {}
-
     query_mandate_id = _query_mandate_id(st)
+
+    if not workspace_access_granted(st, key_prefix):
+        if query_mandate_id:
+            st.info(
+                "Commercial Mandate handoff detected. Enter Private Workspace Access "
+                "to load the mandate automatically."
+            )
+        else:
+            st.caption(
+                "Cloud mandate handoff is protected. Enter Private Workspace Access to enable it."
+            )
+        return {}
     if query_mandate_id:
         try:
             resolved = get_mandate_by_id(
