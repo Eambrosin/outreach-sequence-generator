@@ -493,7 +493,7 @@ IDENTIFY → PRIORITIZE → ENGAGE
 IDENTIFY / Partner Universe → PARTNER → ENGAGE
 ```
 
-**IDENTIFY:** [Opportunity Discovery Intelligence](https://github.com/Eambrosin/opportunity-discovery-intelligence)  
+**IDENTIFY:** [Market Entry & Opportunity Intelligence](https://github.com/Eambrosin/opportunity-discovery-intelligence)  
 **PRIORITIZE:** [Counterparty Qualification & Commercial Priority](https://github.com/Eambrosin/lead-qualification-scorer)  
 **Portfolio:** [github.com/Eambrosin](https://github.com/Eambrosin)
 
