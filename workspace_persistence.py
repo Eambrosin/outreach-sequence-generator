@@ -34,12 +34,19 @@ def config_from_streamlit(st) -> dict[str, str]:
     }
 
 
+def missing_config_fields(config: Mapping[str, Any]) -> list[str]:
+    missing = []
+    if not _clean(config.get("url")):
+        missing.append("AMBROSIN_SUPABASE_URL")
+    if not _clean(config.get("key")):
+        missing.append("AMBROSIN_SUPABASE_KEY")
+    if not _clean(config.get("access_token")):
+        missing.append("AMBROSIN_WORKSPACE_ACCESS_TOKEN")
+    return missing
+
+
 def is_enabled(config: Mapping[str, Any]) -> bool:
-    return bool(
-        _clean(config.get("url"))
-        and _clean(config.get("key"))
-        and _clean(config.get("access_token"))
-    )
+    return not missing_config_fields(config)
 
 
 def workspace_access_granted(st, key_prefix: str) -> bool:
@@ -194,7 +201,12 @@ def _query_mandate_id(st) -> str:
 
 def load_saved_mandate(st, key_prefix: str) -> dict[str, Any]:
     config = config_from_streamlit(st)
-    if not is_enabled(config):
+    missing = missing_config_fields(config)
+    if missing:
+        st.warning(
+            "Private Workspace is not configured. Missing Streamlit secret(s): "
+            + ", ".join(missing)
+        )
         return {}
 
     if not workspace_access_granted(st, key_prefix):
@@ -269,9 +281,11 @@ def render_save_control(
     config = config_from_streamlit(st)
     payload = dict(mandate or {})
 
-    if not is_enabled(config):
+    missing = missing_config_fields(config)
+    if missing:
         st.caption(
-            "Shared cloud persistence is optional. Portable mandate JSON remains available."
+            "Cloud persistence is not active. Missing Streamlit secret(s): "
+            + ", ".join(missing)
         )
         return payload
 
