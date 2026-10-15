@@ -82,7 +82,6 @@ def ensure_mandate_id(mandate: Mapping[str, Any]) -> str:
 def _headers(config: Mapping[str, Any], merge: bool = False) -> dict[str, str]:
     headers = {
         "apikey": str(config["key"]),
-        "Authorization": f"Bearer {config['key']}",
         "Content-Type": "application/json",
     }
     if merge:
