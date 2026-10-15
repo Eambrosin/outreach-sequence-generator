@@ -14,14 +14,34 @@ class FakeStreamlit:
 
 class WorkspacePersistenceTests(unittest.TestCase):
     def test_disabled_without_credentials(self):
-        self.assertFalse(is_enabled({"url": "", "key": ""}))
+        self.assertFalse(
+            is_enabled(
+                {
+                    "url": "",
+                    "key": "",
+                    "access_token": "",
+                }
+            )
+        )
 
-    def test_enabled_with_url_and_key(self):
+    def test_disabled_without_private_access_token(self):
+        self.assertFalse(
+            is_enabled(
+                {
+                    "url": "https://example.supabase.co",
+                    "key": "test-key",
+                    "access_token": "",
+                }
+            )
+        )
+
+    def test_enabled_with_backend_and_private_access(self):
         self.assertTrue(
             is_enabled(
                 {
                     "url": "https://example.supabase.co",
                     "key": "test-key",
+                    "access_token": "workspace-secret",
                 }
             )
         )
