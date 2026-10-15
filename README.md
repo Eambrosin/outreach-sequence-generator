@@ -103,7 +103,7 @@ Creates a multilingual sequence that preserves qualification-first language and 
 
 ENGAGE is the execution layer of the shared **Commercial Mandate Workspace**.
 
-It can load the portable Commercial Mandate JSON or resolve mandate context already embedded in an upstream pipeline. That context remains attached while the workflow progresses from outreach to response, meeting, opportunity, deal sheet and client-ready mandate reporting.
+It can resolve a saved Commercial Mandate automatically from the shared private workspace, load portable Commercial Mandate JSON, or inherit mandate context already embedded in an upstream pipeline. Cross-module navigation carries only the opaque **mandate_id**; after Private Workspace Access is granted, the canonical mandate is restored and remains attached while the workflow progresses from outreach to response, meeting, opportunity, deal sheet and client-ready mandate reporting.
 
 Recommended progression:
 
