@@ -87,44 +87,9 @@ The current live interface is organized around:
 9. **Commercial Deal Sheet** — structure active commercial terms without turning assumptions into facts.
 10. **Commercial Mandate Reporting** — track the mandate funnel and produce client-ready operational reporting.
 
-The live interface is the source of truth for the current Workspace shell; existing screenshots focus on the underlying outreach and execution views.
-
 ---
 
-## Product Preview
-
-### 1. Executive Outreach Intelligence
-
-![Executive Summary](screenshots/v2-executive-summary.png)
-
-A concise view of outreach priority, readiness, channel availability and commercial next actions.
-
-### 2. Adaptive Priority Ranking
-
-![Priority Ranking](screenshots/v2-priority-ranking.png)
-
-Accounts are ordered using upstream commercial context rather than treating every prospect equally.
-
-### 3. Account & Outreach Intelligence
-
-![Account Intelligence](screenshots/v2-account-intelligence.png)
-
-Brings account context, qualification gaps, channel strategy and messaging logic into one workspace.
-
-### 4. Adaptive Cadence
-
-![Adaptive Cadence](screenshots/v2-adaptive-cadence.png)
-
-Cadence changes according to commercial priority, qualification state and available engagement paths.
-
-### 5. Generated Outreach Sequence
-
-![Generated Sequence](screenshots/v2-generated-sequence.png)
-
-Creates a multilingual sequence that preserves qualification-first language and avoids exposing internal scoring.
-
 ---
-
 
 ## Ambrosin Commercial Mandate Workspace
 
