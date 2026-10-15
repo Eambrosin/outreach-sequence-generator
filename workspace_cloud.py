@@ -40,7 +40,6 @@ def workspace_table_from_streamlit(st) -> str:
 def _headers(config: Mapping[str, Any], merge: bool = False) -> dict[str, str]:
     headers = {
         "apikey": str(config["key"]),
-        "Authorization": f"Bearer {config['key']}",
         "Content-Type": "application/json",
     }
     if merge:
