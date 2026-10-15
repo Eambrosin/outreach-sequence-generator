@@ -1,6 +1,6 @@
-# Adaptive Outreach Intelligence Platform
+# Business Development Execution & Outreach
 
-### Commercial Prioritization | Adaptive Cadence | Multilingual Outreach | Qualification-First Execution
+### Mandate-Aware Outreach | Adaptive Cadence | Opportunity Execution | Commercial Reporting
 
 **Operational focus:** Business Development Execution & Follow-Up
 
@@ -37,12 +37,13 @@ ENGAGE turns upstream qualification intelligence into a structured commercial se
 
 ---
 
+
 ## Commercial Workflow
 
 ```text
 COMMERCIAL MANDATE
         +
-QUALIFICATION CONTEXT
+QUALIFIED BUYER / PARTNER PIPELINE
         ↓
 ACCOUNT PRIORITY
         +
@@ -54,14 +55,39 @@ OUTREACH STRATEGY
         ↓
 ADAPTIVE CADENCE
         ↓
-MULTILINGUAL TOUCHES
+RESPONSE / MEETING / FIELD FEEDBACK
         ↓
-NEXT ACTION
+BUSINESS DEVELOPMENT EXECUTION LOG
         ↓
-VISIT / RESPONSE FEEDBACK
+ACTIVE OPPORTUNITY
+        ↓
+COMMERCIAL DEAL SHEET
+        ↓
+MANDATE REPORTING
 ```
 
-The system can work independently or consume upstream handoffs from IDENTIFY, PRIORITIZE and PARTNER.
+ENGAGE can consume qualified handoffs from PRIORITIZE and PARTNER and can also resume a previously saved Workspace Snapshot.
+
+When a live Commercial Mandate is active but no real pipeline has been supplied, ENGAGE waits for the mandate-specific CSV or Workspace Snapshot instead of mixing demonstration accounts into live commercial work.
+
+---
+
+## Current Interface
+
+The current live interface is organized around:
+
+1. **Resume Workspace Snapshot** — restore a point-in-time execution workspace.
+2. **Saved Commercial Mandate** — restore client, corridor, product and counterparty context from the shared private workspace.
+3. **Upload Pipeline CSV** — load qualified buyer or partner records from upstream.
+4. **Commercial Mandate Workspace** — keep the active mandate and stage visible.
+5. **Executive Summary & Territory Execution** — review accounts, value context, priority, territory readiness and field-planning signals.
+6. **Account & Business Development Workspace** — select an account and review the recommended commercial motion.
+7. **Adaptive Outreach Sequence** — generate deterministic or optional AI-assisted prospect-facing copy.
+8. **Business Development Execution Log** — record responses, meetings, objections, qualification evidence and next actions.
+9. **Commercial Deal Sheet** — structure active commercial terms without turning assumptions into facts.
+10. **Commercial Mandate Reporting** — track the mandate funnel and produce client-ready operational reporting.
+
+The live interface is the source of truth for the current Workspace shell; existing screenshots focus on the underlying outreach and execution views.
 
 ---
 
@@ -99,13 +125,21 @@ Creates a multilingual sequence that preserves qualification-first language and 
 
 ---
 
-## Ambrosin Mandate Workspace
+
+## Ambrosin Commercial Mandate Workspace
 
 ENGAGE is the execution layer of the shared **Commercial Mandate Workspace**.
 
-It can resolve a saved Commercial Mandate automatically from the shared private workspace, load portable Commercial Mandate JSON, or inherit mandate context already embedded in an upstream pipeline. Cross-module navigation carries only the opaque **mandate_id**; after Private Workspace Access is granted, the canonical mandate is restored and remains attached while the workflow progresses from outreach to response, meeting, opportunity, deal sheet and client-ready mandate reporting.
+A saved mandate can be selected directly or opened from IDENTIFY, PRIORITIZE or PARTNER through an opaque **mandate_id**. After **Private Workspace Access** is granted, the canonical mandate is restored from the private Supabase-backed workspace.
 
-When an active mandate is loaded without an upstream pipeline, ENGAGE waits for a qualified CSV or Workspace Snapshot rather than falling back to demo data. This prevents sample accounts from being mixed into a live commercial mandate.
+The current input hierarchy is:
+
+1. **Workspace Snapshot**, when resuming a previous operational session
+2. **Saved Commercial Mandate** from the shared workspace
+3. optional portable Commercial Mandate JSON override
+4. qualified Pipeline CSV from PRIORITIZE / PARTNER
+
+The mandate remains attached while the workflow progresses from outreach to response, meeting, opportunity, deal sheet and reporting.
 
 Recommended progression:
 
@@ -163,7 +197,10 @@ Because snapshots may contain commercially sensitive information, they should be
 - Commercial Deal Sheet
 - Commercial Mandate Reporting
 - mandate funnel and client-ready reporting
-- shared Ambrosin Mandate Workspace navigation
+- shared private Ambrosin Commercial Mandate Workspace
+- automatic mandate restoration through `mandate_id`
+- Supabase-backed mandate persistence
+- mandate-safe pipeline behavior
 - portable Commercial Mandate JSON
 - portable upstream handoffs
 - CSV import / export
@@ -342,51 +379,59 @@ Language generation is treated as an execution layer rather than a replacement f
 
 ---
 
-## IDENTIFY / PRIORITIZE → ENGAGE
 
-ENGAGE can receive context from:
+## PRIORITIZE / PARTNER → ENGAGE
 
-**IDENTIFY — Opportunity Discovery Intelligence**
+ENGAGE is designed to consume qualified execution context rather than restart research.
 
-- account identity
-- public-contact evidence
-- Account Opportunity
+**From PRIORITIZE**, it can preserve:
+
+- ICP / commercial priority
+- score rationale and tier
 - Qualification Readiness
-- Buyer Access
-- Sales Motion
-- qualification questions
-- evidence gaps
-
-**PRIORITIZE — Lead Qualification & Revenue Prioritization**
-
-- ICP fit
-- commercial score
-- priority tier
-- revenue context
-- recommended action
+- Buyer Access / Sales Motion
 - qualification gaps
+- recommended action
+- Commercial Mandate context
 
-The objective is to avoid restarting research at the outreach stage.
+**From PARTNER**, it can preserve:
+
+- partner role and archetype
+- strategic fit and market-access context
+- route-to-market readiness
+- due-diligence gaps
+- technical / after-sales capability
+- recommended partner-development action
+- Commercial Mandate context
+
+IDENTIFY evidence can still travel downstream through these handoffs. The objective is continuity: research, qualification, partner validation and execution should not be rebuilt at every stage.
 
 ---
+
 
 ## Architecture
 
 ```text
 app.py
   ↓
-upstream handoff / direct account input
+workspace_persistence.py / mandate_workspace.py
+  ↓
+workspace_cloud.py / workspace_snapshot.py
+  ↓
+upstream pipeline normalization
   ↓
 outreach_generator.py
   ↓
 adaptive cadence + message generation
   ↓
-field_planner.py
+field_planner.py / visit_feedback.py
   ↓
-visit_feedback.py
+bd_execution.py / commercial_deal.py
+  ↓
+mandate_reporting.py / client_reporting.py
 ```
 
-Deterministic commercial logic remains available even when the optional AI layer is disabled.
+Deterministic commercial logic remains available without an AI key. Shared workspace persistence handles mandate context, while Workspace Snapshots preserve a portable point-in-time operational state.
 
 ---
 
@@ -423,13 +468,23 @@ Optional AI features require the relevant API key in environment variables or St
 
 ---
 
+
 ## Current Version
 
-**v2.1.0 — Adaptive Outreach Intelligence**
+**Main branch — Workspace-enabled ENGAGE**
 
-Current functionality includes qualification-aware handoffs, account intelligence, priority-based cadence, multilingual execution, field-sales context and stronger evidence-aware outreach behavior.
+The tagged v2.1 release established adaptive, qualification-aware outreach. The current main branch extends it with:
 
-Release notes are available in [docs/RELEASE_NOTES_v2.1.0.md](docs/RELEASE_NOTES_v2.1.0.md).
+- shared private Commercial Mandate persistence
+- automatic `mandate_id` restoration
+- mandate-safe pipeline behavior
+- Workspace Snapshot recovery
+- Business Development Execution Log
+- Commercial Deal Sheet
+- mandate funnel and client reporting
+- continuity from PRIORITIZE and PARTNER into execution
+
+The main branch extends the tagged release without claiming an unpublished release number.
 
 ---
 
@@ -466,7 +521,7 @@ IDENTIFY / Partner Universe → PARTNER → ENGAGE
 ```
 
 **IDENTIFY:** [Opportunity Discovery Intelligence](https://github.com/Eambrosin/opportunity-discovery-intelligence)  
-**PRIORITIZE:** [Lead Qualification & Revenue Prioritization](https://github.com/Eambrosin/lead-qualification-scorer)  
+**PRIORITIZE:** [Counterparty Qualification & Commercial Priority](https://github.com/Eambrosin/lead-qualification-scorer)  
 **Portfolio:** [github.com/Eambrosin](https://github.com/Eambrosin)
 
 ---
