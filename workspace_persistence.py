@@ -276,7 +276,12 @@ def render_save_control(
         )
         return payload
 
-    if not workspace_access_granted(st, key_prefix):
+    if not st.session_state.get(
+        f"{key_prefix}_workspace_authorized"
+    ):
+        st.caption(
+            "Enter Private Workspace Access above to enable cloud save/update."
+        )
         return payload
 
     if st.button(
