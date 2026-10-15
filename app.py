@@ -717,6 +717,20 @@ else:
 
     else:
 
+        if mandate_override:
+            render_mandate_workspace(
+                st,
+                "ENGAGE",
+                mandate_override,
+            )
+            st.info(
+                "Commercial Mandate loaded. Upload the qualified pipeline from "
+                "PRIORITIZE / PARTNER, or resume a Workspace Snapshot, to begin "
+                "Business Development execution. Demo pipeline data is not mixed "
+                "into an active client mandate."
+            )
+            st.stop()
+
         sample_path = Path(
             "data/pipeline.csv"
         )
