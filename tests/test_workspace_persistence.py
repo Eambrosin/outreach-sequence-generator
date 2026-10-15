@@ -74,6 +74,22 @@ class WorkspacePersistenceTests(unittest.TestCase):
             "mandate_auto_456",
         )
 
+    def test_legacy_service_role_key_adds_authorization_header(self):
+        from workspace_persistence import _headers
+
+        key = "aaa.bbb.ccc"
+        headers = _headers({"key": key})
+        self.assertEqual(headers["apikey"], key)
+        self.assertEqual(headers["Authorization"], f"Bearer {key}")
+
+    def test_new_secret_key_does_not_add_bearer_header(self):
+        from workspace_persistence import _headers
+
+        key = "sb_secret_example"
+        headers = _headers({"key": key})
+        self.assertEqual(headers["apikey"], key)
+        self.assertNotIn("Authorization", headers)
+
 
 if __name__ == "__main__":
     unittest.main()
