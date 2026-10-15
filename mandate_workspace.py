@@ -66,8 +66,18 @@ def workspace_plan(
             next_stage = "PRIORITIZE"
             next_action = "Qualify and prioritize buyer / end-customer candidates"
     elif stage == "PRIORITIZE":
-        next_stage = "ENGAGE"
-        next_action = "Move qualified counterparties into Business Development execution"
+        if focus == "Partners":
+            next_stage = "PARTNER"
+            next_action = "Evaluate qualified partner candidates for route-to-market readiness"
+        elif focus == "Buyers + Partners":
+            next_stage = "ENGAGE / PARTNER"
+            next_action = (
+                "Move qualified buyers into Business Development execution "
+                "and evaluate route-to-market partner candidates"
+            )
+        else:
+            next_stage = "ENGAGE"
+            next_action = "Move qualified buyers into Business Development execution"
     elif stage == "PARTNER":
         next_stage = "ENGAGE"
         next_action = "Move validated partner candidates into partner development and follow-up"
