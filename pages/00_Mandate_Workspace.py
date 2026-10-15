@@ -15,7 +15,7 @@ from workspace_cloud import (
     workspace_label,
 )
 from workspace_dashboard import build_next_action_queue, workspace_counts
-from workspace_persistence import is_enabled
+from workspace_persistence import is_enabled, workspace_access_granted
 from workspace_snapshot import (
     snapshot_filename,
     snapshot_from_json,
@@ -36,7 +36,11 @@ st.caption(
 )
 
 config, workspace_table = cloud_settings(st)
-cloud_enabled = is_enabled(config)
+cloud_available = is_enabled(config)
+cloud_enabled = (
+    cloud_available
+    and workspace_access_granted(st, "workspace_page")
+)
 
 selected_cloud_snapshot = {}
 cloud_records = []
@@ -75,10 +79,15 @@ if cloud_enabled:
         st.caption(
             "Cloud persistence is configured, but no saved workspace exists yet."
         )
-else:
+elif not cloud_available:
     st.info(
         "Cloud persistence is optional and currently not configured. "
         "You can still open, inspect and download portable Workspace Snapshots."
+    )
+else:
+    st.info(
+        "Cloud persistence is configured but protected. "
+        "Enter Private Workspace Access above to read or write saved mandates."
     )
 
 uploaded_snapshot = st.file_uploader(
