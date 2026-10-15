@@ -26,11 +26,32 @@ class MandateWorkspaceTests(unittest.TestCase):
         )
         self.assertEqual(plan["next_stage"], "PARTNER")
 
-    def test_partner_and_prioritize_progress_to_engage(self):
-        self.assertEqual(
-            workspace_plan("PRIORITIZE", {})["next_stage"],
-            "ENGAGE",
+    def test_prioritize_buyer_mandate_progresses_to_engage(self):
+        plan = workspace_plan(
+            "PRIORITIZE",
+            {"mandate_counterparty_focus": "Buyers"},
         )
+        self.assertEqual(plan["next_stage"], "ENGAGE")
+        self.assertIn("qualified buyers", plan["next_action"])
+
+    def test_prioritize_partner_mandate_progresses_to_partner(self):
+        plan = workspace_plan(
+            "PRIORITIZE",
+            {"mandate_counterparty_focus": "Partners"},
+        )
+        self.assertEqual(plan["next_stage"], "PARTNER")
+        self.assertIn("partner candidates", plan["next_action"])
+
+    def test_prioritize_mixed_mandate_splits_buyer_and_partner_paths(self):
+        plan = workspace_plan(
+            "PRIORITIZE",
+            {"mandate_counterparty_focus": "Buyers + Partners"},
+        )
+        self.assertEqual(plan["next_stage"], "ENGAGE / PARTNER")
+        self.assertIn("qualified buyers", plan["next_action"])
+        self.assertIn("route-to-market partner candidates", plan["next_action"])
+
+    def test_partner_progresses_to_engage(self):
         self.assertEqual(
             workspace_plan("PARTNER", {})["next_stage"],
             "ENGAGE",
