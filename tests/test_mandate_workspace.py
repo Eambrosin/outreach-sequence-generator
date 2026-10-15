@@ -1,6 +1,6 @@
 import unittest
 
-from mandate_workspace import APP_URLS, workspace_plan
+from mandate_workspace import APP_URLS, stage_url, workspace_plan
 
 
 class MandateWorkspaceTests(unittest.TestCase):
@@ -44,6 +44,22 @@ class MandateWorkspaceTests(unittest.TestCase):
         self.assertEqual(
             set(APP_URLS),
             {"IDENTIFY", "PRIORITIZE", "PARTNER", "ENGAGE"},
+        )
+
+    def test_stage_url_propagates_mandate_id(self):
+        url = stage_url(
+            "ENGAGE",
+            {"mandate_id": "mandate_demo_123"},
+        )
+        self.assertIn(
+            "mandate_id=mandate_demo_123",
+            url,
+        )
+
+    def test_stage_url_without_mandate_id_keeps_base_url(self):
+        self.assertEqual(
+            stage_url("PARTNER", {}),
+            APP_URLS["PARTNER"],
         )
 
 
