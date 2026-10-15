@@ -7,7 +7,7 @@ import streamlit as st
 
 from client_reporting import build_funnel_rows, client_report_to_markdown
 from mandate_reporting import build_mandate_report
-from mandate_workspace import APP_LABELS, APP_URLS
+from mandate_workspace import APP_LABELS, stage_url
 from workspace_cloud import (
     cloud_settings,
     list_workspaces,
@@ -365,6 +365,6 @@ for column, stage in zip(
         st.caption(APP_LABELS[stage])
         st.link_button(
             f"Open {stage}",
-            APP_URLS[stage],
+            stage_url(stage, mandate),
             use_container_width=True,
         )
