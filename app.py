@@ -10,6 +10,7 @@ import streamlit as st
 from field_planner import build_field_day_plan
 from visit_feedback import OUTCOME_SIGNALS, build_visit_feedback
 from mandate_workspace import render_mandate_workspace
+from workspace_persistence import load_saved_mandate, render_save_control
 from commercial_mandate import (
     apply_mandate_fields,
     has_mandate_context,
@@ -660,6 +661,8 @@ if snapshot_file is not None:
         workspace_snapshot = {}
 
 
+cloud_mandate = load_saved_mandate(st, key_prefix="engage")
+
 mandate_file = st.file_uploader(
     "Optional Commercial Mandate JSON",
     type=["json"],
@@ -673,7 +676,7 @@ mandate_file = st.file_uploader(
 mandate_override = (
     workspace_snapshot.get("mandate", {})
     if workspace_snapshot
-    else {}
+    else dict(cloud_mandate)
 )
 
 if mandate_file is not None:
@@ -756,6 +759,14 @@ workspace_mandate = (
     mandate_override
     or raw_df.iloc[0].to_dict()
 )
+workspace_mandate = render_save_control(
+    st,
+    workspace_mandate,
+    source_stage="ENGAGE",
+    key_prefix="engage",
+)
+if has_mandate_context(workspace_mandate):
+    raw_df = apply_mandate_fields(raw_df, workspace_mandate)
 render_mandate_workspace(
     st,
     "ENGAGE",
