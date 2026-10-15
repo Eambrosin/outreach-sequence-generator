@@ -318,6 +318,15 @@ def render_save_control(
     ):
         try:
             payload = save_mandate(config, payload, source_stage)
+            mandate_id = _clean(payload.get("mandate_id"))
+            if mandate_id:
+                st.session_state[
+                    f"{key_prefix}_active_mandate_id"
+                ] = mandate_id
+                try:
+                    st.query_params["mandate_id"] = mandate_id
+                except Exception:
+                    pass
             st.success("Commercial Mandate saved to the shared workspace.")
         except Exception as exc:
             st.error(f"Could not save Commercial Mandate: {exc}")
