@@ -1,8 +1,9 @@
 -- Ambrosin Commercial Mandate Workspace
 -- Run this in the Supabase SQL editor for the private workspace project.
 -- The tables intentionally use RLS with no public policies.
--- Server-side access should use a Supabase service-role key stored only in
--- Streamlit secrets. Never commit that key to GitHub or expose it client-side.
+-- Server-side access should use a Supabase Secret key (sb_secret_...), or the
+-- legacy service_role key if required, stored only in Streamlit secrets.
+-- Never commit that key to GitHub or expose it client-side.
 
 create table if not exists public.commercial_mandates (
     mandate_id text primary key,
@@ -44,3 +45,12 @@ alter table public.commercial_workspaces enable row level security;
 -- No anon/authenticated policies are created intentionally.
 -- A server-side service-role key bypasses RLS and keeps these commercial
 -- records inaccessible through the public Supabase API role.
+
+
+grant select, insert, update, delete
+    on table public.commercial_mandates
+    to service_role;
+
+grant select, insert, update, delete
+    on table public.commercial_workspaces
+    to service_role;
