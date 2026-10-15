@@ -38,10 +38,15 @@ def workspace_table_from_streamlit(st) -> str:
 
 
 def _headers(config: Mapping[str, Any], merge: bool = False) -> dict[str, str]:
+    key = str(config["key"]).strip()
     headers = {
-        "apikey": str(config["key"]),
+        "apikey": key,
         "Content-Type": "application/json",
     }
+
+    if key.count(".") == 2:
+        headers["Authorization"] = f"Bearer {key}"
+
     if merge:
         headers["Prefer"] = "resolution=merge-duplicates,return=representation"
     return headers
